@@ -1,3 +1,4 @@
+import tensorflow as tf
 import numpy as np
 
 def main():
@@ -6,4 +7,5 @@ def main():
 
 if __name__ == "__main__":
     print('Hello world!')
+    print(tf.__version__)
     main()
