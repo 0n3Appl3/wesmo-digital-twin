@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import ComplicationTemplate from './components/complications/ComplicationTemplate.vue';
 </script>
 
 <template>
@@ -14,6 +15,7 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
+      <ComplicationTemplate :size="1" />
     </div>
   </header>
 
