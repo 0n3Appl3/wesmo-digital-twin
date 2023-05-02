@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import ComplicationTemplate from './components/complications/ComplicationTemplate.vue';
+import ComplicationsGrid from './components/complications/ComplicationsGrid.vue';
 </script>
 
 <template>
+  <ComplicationsGrid />
+</template>
+<!-- <template>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -20,7 +23,7 @@ import ComplicationTemplate from './components/complications/ComplicationTemplat
   </header>
 
   <RouterView />
-</template>
+</template> -->
 
 <style scoped>
 header {
