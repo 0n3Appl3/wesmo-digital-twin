@@ -9,8 +9,6 @@ export default {
     data() {
         return {
             container: 'container',
-			containerSizeValue: this.size * 10,
-			containerSize: this.containerSizeValue + 'rem',
         }
     },
 	computed: {
@@ -24,7 +22,8 @@ export default {
 
 <template>
     <div :class="[container, setGridState]">
-        <p>Complication<br/>Size: {{ size }}</p>
+        <p>Size: {{ size }}</p>
+		<slot />
     </div>
 </template>
 
@@ -35,8 +34,6 @@ export default {
 	justify-content: center;
 	align-items: center;
 	padding: 1rem;
-	width: v-bind(containerSize);
-	height: v-bind(containerSize);
 	border-radius: 2rem;
 	background: var(--colour-background);
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
@@ -51,11 +48,10 @@ export default {
 
 .medium-grid-size {
 	grid-column: auto / span 2;
-	grid-row: auto / span 2;
 }
 
 .large-grid-size {
 	grid-column: auto / span 3;
-	grid-row: auto / span 3;
+	grid-row: auto / span 2;
 }
 </style>
