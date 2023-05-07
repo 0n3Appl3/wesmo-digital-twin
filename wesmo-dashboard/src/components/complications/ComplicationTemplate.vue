@@ -8,7 +8,7 @@ export default {
     },
     data() {
         return {
-            container: 'container',
+            container: 'complication__container',
         }
     },
 	computed: {
@@ -28,19 +28,18 @@ export default {
 </template>
 
 <style scoped>
-.container {
+.complication__container {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	padding: 1rem;
+	padding: 0.5rem;
 	border-radius: 2rem;
-	background: var(--colour-background);
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
 				-10px -10px 30px var(--white-box-shadow-2);
 }
 
-.container:hover {
+.complication__container:hover {
 	box-shadow: inset 10px 10px 30px var(--white-box-shadow-1),
 				inset -10px -10px 30px var(--white-box-shadow-2);
 	cursor: pointer;

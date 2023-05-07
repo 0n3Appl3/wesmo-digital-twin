@@ -1,0 +1,29 @@
+<script lang="ts">
+export default {
+    data() {
+        return {
+            container: 'title-bar__container',
+        }
+    }
+};
+</script>
+
+<template>
+    <div :class="container">
+        <h1>WESMO Battery Dashboard</h1>
+    </div>
+</template>
+
+<style scoped>
+.title-bar__container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 1.5rem;
+    margin-bottom: 2rem;
+	border-radius: 1rem;
+	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
+				-10px -10px 30px var(--white-box-shadow-2);
+}
+</style>
