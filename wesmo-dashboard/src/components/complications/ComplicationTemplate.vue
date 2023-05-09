@@ -22,7 +22,7 @@ export default {
 
 <template>
     <div :class="[container, setGridState]">
-        <p>Size: {{ size }}</p>
+        <!-- <p>Size: {{ size }}</p> -->
 		<slot />
     </div>
 </template>

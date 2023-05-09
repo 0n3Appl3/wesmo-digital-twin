@@ -1,4 +1,5 @@
 <script lang="ts">
+import BarVisual from '../visualisations/BarVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 
 export default {
@@ -8,14 +9,16 @@ export default {
             grid: 'grid',
         }
     },
-    components: { ComplicationTemplate }
+    components: { ComplicationTemplate, BarVisual }
 };
 </script>
 
 <template>
     <div :class="container">
         <div :class="grid">
-            <ComplicationTemplate :size="1" />
+            <ComplicationTemplate :size="1">
+                <BarVisual />
+            </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
             <ComplicationTemplate :size="2">
                 <p><strong>Bold Text (font support?)</strong></p>
