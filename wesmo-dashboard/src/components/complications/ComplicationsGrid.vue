@@ -7,6 +7,11 @@ export default {
         return {
             container: 'grid__container',
             grid: 'grid',
+            bar: {
+                text: 'Test Component',
+                current: 0.47,
+                max: 1,
+            }
         }
     },
     components: { ComplicationTemplate, BarVisual }
@@ -17,7 +22,7 @@ export default {
     <div :class="container">
         <div :class="grid">
             <ComplicationTemplate :size="1">
-                <BarVisual />
+                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
             <ComplicationTemplate :size="2">
@@ -27,7 +32,6 @@ export default {
             <ComplicationTemplate :size="3">
                 <h1>Heading 1</h1>
                 <p>Paragraph text</p>
-                <img src="https://crunchbase-production-res.cloudinary.com/image/fetch/s--wuEAmLGW--/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/http://upload.wikimedia.org/wikipedia/en/4/43/University_of_Waikato_logo.png" alt="Uni Logo"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
             <ComplicationTemplate :size="1" />

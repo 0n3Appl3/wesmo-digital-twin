@@ -32,8 +32,9 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: center;
-	padding: 0.5rem;
+	/* align-items: center; */
+	align-items: left;
+	padding: 0.8rem;
 	border-radius: 2rem;
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
 				-10px -10px 30px var(--white-box-shadow-2);
