@@ -8,6 +8,7 @@ export default {
     },
     data() {
         return {
+			wrapper: 'wrapper',
             container: 'complication__container',
         }
     },
@@ -23,7 +24,9 @@ export default {
 <template>
     <div :class="[container, setGridState]">
         <!-- <p>Size: {{ size }}</p> -->
-		<slot />
+		<div :class="wrapper">
+			<slot />
+		</div>
     </div>
 </template>
 
@@ -44,6 +47,10 @@ export default {
 	box-shadow: inset 10px 10px 30px var(--white-box-shadow-1),
 				inset -10px -10px 30px var(--white-box-shadow-2);
 	cursor: pointer;
+}
+
+.complication__container:hover > .wrapper {
+	transform: scale(0.97);
 }
 
 .medium-grid-size {
