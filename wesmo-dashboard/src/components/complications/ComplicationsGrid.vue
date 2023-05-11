@@ -26,12 +26,10 @@ export default {
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
             <ComplicationTemplate :size="2">
-                <p><strong>Bold Text (font support?)</strong></p>
-                <p><em>Italicised Text</em></p>
+                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="3">
-                <h1>Heading 1</h1>
-                <p>Paragraph text</p>
+                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
             <ComplicationTemplate :size="1" />
