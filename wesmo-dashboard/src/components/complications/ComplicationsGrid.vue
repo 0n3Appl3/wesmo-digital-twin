@@ -1,6 +1,7 @@
 <script lang="ts">
 import BarVisual from '../visualisations/BarVisual.vue';
 import NumberVisual from '../visualisations/NumberVisual.vue';
+import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 
 export default {
@@ -17,10 +18,14 @@ export default {
                 text: 'Test Component',
                 value: 1234,
                 suffix: 'test',
-            }
+            },
+            status: {
+                text: 'Test Component',
+                status: 'Normal',
+            },
         }
     },
-    components: { ComplicationTemplate, BarVisual, NumberVisual }
+    components: { ComplicationTemplate, BarVisual, NumberVisual, StatusVisual }
 };
 </script>
 
@@ -39,7 +44,9 @@ export default {
             <ComplicationTemplate :size="3">
                 <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
             </ComplicationTemplate>
-            <ComplicationTemplate :size="1" />
+            <ComplicationTemplate :size="1">
+                <StatusVisual :text-value="status.text" :status-value="status.status"/>
+            </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
         </div>
     </div>
