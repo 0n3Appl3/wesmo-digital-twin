@@ -22,6 +22,7 @@ export default {
             status: {
                 text: 'Test Component',
                 status: 'Normal',
+                state: 1,
             },
         }
     },
@@ -45,7 +46,7 @@ export default {
                 <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1">
-                <StatusVisual :text-value="status.text" :status-value="status.status"/>
+                <StatusVisual :text-value="status.text" :status-value="status.status" :state-value="status.state"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" />
         </div>
