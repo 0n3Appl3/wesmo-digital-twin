@@ -62,10 +62,9 @@ export default {
 }
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, 10rem);
-    grid-auto-rows: 10rem;
+    grid-template-columns: repeat(4, 13rem);
+    grid-auto-rows: 13rem;
     grid-gap: 1.5rem 1.5rem;
     grid-auto-flow: row dense;
-    /* aspect-ratio: 1; */
 }
 </style>

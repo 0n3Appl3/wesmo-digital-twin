@@ -23,7 +23,6 @@ export default {
 
 <template>
     <div :class="[container, setGridState]">
-        <!-- <p>Size: {{ size }}</p> -->
 		<div :class="wrapper">
 			<slot />
 		</div>
@@ -35,7 +34,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	/* align-items: center; */
 	align-items: left;
 	padding: 0.8rem;
 	border-radius: 2rem;
