@@ -1,6 +1,7 @@
 <script lang="ts">
 import BarVisual from '../visualisations/BarVisual.vue';
 import NumberVisual from '../visualisations/NumberVisual.vue';
+import PieVisual from '../visualisations/PieVisual.vue';
 import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 
@@ -24,9 +25,14 @@ export default {
                 status: 'Normal',
                 state: 1,
             },
+            pie: {
+                text: 'Test Component',
+                current: 0.45,
+                max: 1,
+            }
         }
     },
-    components: { ComplicationTemplate, BarVisual, NumberVisual, StatusVisual }
+    components: { ComplicationTemplate, BarVisual, NumberVisual, StatusVisual, PieVisual }
 };
 </script>
 
@@ -48,7 +54,9 @@ export default {
             <ComplicationTemplate :size="1">
                 <StatusVisual :text-value="status.text" :status-value="status.status" :state-value="status.state"/>
             </ComplicationTemplate>
-            <ComplicationTemplate :size="1" />
+            <ComplicationTemplate :size="1">
+                <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" />
+            </ComplicationTemplate>
         </div>
     </div>
 </template>
@@ -62,8 +70,8 @@ export default {
 }
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, 13rem);
-    grid-auto-rows: 13rem;
+    grid-template-columns: repeat(4, 12rem);
+    grid-auto-rows: 12rem;
     grid-gap: 1.5rem 1.5rem;
     grid-auto-flow: row dense;
 }
