@@ -27,7 +27,7 @@ export default {
             },
             pie: {
                 text: 'Test Component',
-                current: 0.45,
+                current: 0.37,
                 max: 1,
             }
         }

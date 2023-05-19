@@ -1,5 +1,4 @@
 <script lang="ts">
-import type { CSSProperties } from 'vue';
 export default {
     props: {
         textValue: {
@@ -17,37 +16,34 @@ export default {
     data() {
         return {
             wrapper: 'pie__wrapper',
-            label: 'bar__text-label',
-            value: 'bar__text-value',
+            progress: 'pie__progress',
+            label: 'pie__text-label',
+            value: 'pie__text-value',
             container: 'pie__container',
+            halfPieSize: 50,
         }
     },
     computed: {
 		setProgress() {
-			return Math.round((this.currentValue / this.maxValue) * 100);
+			return this.currentValue * 100;
 		},
-        setColour() {
-            const progress: number = this.setProgress;
-            let colour: string = '';
-            switch(true) {
-                case (progress >= 70):
-                    colour = '#26e35b';
-                    break;
-                case (progress >= 30):
-                    colour = '#efc015';
-                    break;
-                default:
-                    colour = '#e33926';
-                    break;
+        setPieColour() {
+            let pieColour: string = '';
+            if (this.setProgress <= this.halfPieSize) {
+                pieColour = '#ddd';
+            } else {
+                pieColour = '#227ded';
             }
-            return colour;
+            return pieColour;
         },
-        setBarStyle() {
-            const barStyle: CSSProperties = {
-                width: this.setProgress + '%',
-                backgroundColor: this.setColour,
+        setPieSize() {
+            let rotationValue: number = 0;
+            if (this.setProgress <= this.halfPieSize) {
+                rotationValue = (100 - (50 - this.setProgress)) / 100 * 360 * -1;
+            } else {
+                rotationValue = (100 - this.setProgress) / 100 * 360;
             }
-            return barStyle;
+            return rotationValue + 'deg';
         },
 	},
 };
@@ -55,7 +51,7 @@ export default {
 
 <template>
     <div :class="container">
-        <div class="pie__wrapper progress45">
+        <div :class="[wrapper, progress]">
         </div>
         <p :class="label">{{ textValue }}</p>
     </div>
@@ -81,18 +77,17 @@ export default {
     margin-left: 50%;
     height: 100%;
 }
-.pie__wrapper.progress45 {
+.pie__wrapper.pie__progress {
     background: linear-gradient(to right, #227ded 50%, #ddd 50%);
-    /* transform: rotate(95 / 100 * 360deg * -1); */
 }
-.pie__wrapper.progress45:before {
-    background: #ddd;
-    transform: rotate(-5.96902604rad);
+.pie__wrapper.pie__progress:before {
+    background: v-bind(setPieColour);
+    transform: rotate(v-bind(setPieSize));
 }
-.bar__text-label {
+.pie__text-label {
     font-size: 0.9rem;
 }
-.bar__text-value {
+.pie__text-value {
     font-size: 2rem;
 }
 .pie__container {
