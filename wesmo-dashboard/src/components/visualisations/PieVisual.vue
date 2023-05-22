@@ -10,11 +10,19 @@ export default {
         },
         maxValue: {
 			type: Number,
-			default: 1,
+			default: 100,
 		},
         textSuffix: {
             type: String,
-        }
+        },
+        safeThreshold: {
+            type: Number,
+            default: 55,
+        },
+        warningThreshold: {
+            type: Number,
+            default: 80,
+        },
     },
     data() {
         return {
@@ -31,13 +39,29 @@ export default {
 			return Math.round((this.currentValue / this.maxValue) * 100);
 		},
         setPieColour() {
+            const progress: number = this.setProgress;
             let pieColour: string = '';
-            if (this.setProgress <= this.halfPieSize) {
-                pieColour = '#ddd';
-            } else {
-                pieColour = '#227ded';
+            switch(true) {
+                case (progress <= this.safeThreshold):
+                    pieColour = '#26e35b';
+                    break;
+                case (progress > this.safeThreshold && progress <= this.warningThreshold):
+                    pieColour = '#efc015';
+                    break;
+                default:
+                    pieColour = '#d95243';
+                    break;
             }
             return pieColour;
+        },
+        setColour() {
+            let colour: string = '';
+            if (this.setProgress <= this.halfPieSize) {
+                colour = '#ddd';
+            } else {
+                colour = this.setPieColour;
+            }
+            return colour;
         },
         setPieSize() {
             let rotationValue: number = 0;
@@ -82,10 +106,10 @@ export default {
     height: 100%;
 }
 .pie__wrapper.pie__progress {
-    background: linear-gradient(to right, #227ded 50%, #ddd 50%);
+    background: linear-gradient(to right, v-bind(setPieColour) 50%, #ddd 50%);
 }
 .pie__wrapper.pie__progress:before {
-    background: v-bind(setPieColour);
+    background: v-bind(setColour);
     transform: rotate(v-bind(setPieSize));
 }
 .pie__text-label {
