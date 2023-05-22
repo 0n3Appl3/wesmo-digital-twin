@@ -11,7 +11,10 @@ export default {
         maxValue: {
 			type: Number,
 			default: 1,
-		}
+		},
+        textSuffix: {
+            type: String,
+        }
     },
     data() {
         return {
@@ -25,7 +28,7 @@ export default {
     },
     computed: {
 		setProgress() {
-			return this.currentValue * 100;
+			return Math.round((this.currentValue / this.maxValue) * 100);
 		},
         setPieColour() {
             let pieColour: string = '';
@@ -52,6 +55,7 @@ export default {
 <template>
     <div :class="container">
         <div :class="[wrapper, progress]">
+            <span :class="value">{{ setProgress }}<span>{{ textSuffix }}</span></span>
         </div>
         <p :class="label">{{ textValue }}</p>
     </div>
@@ -88,7 +92,13 @@ export default {
     font-size: 0.9rem;
 }
 .pie__text-value {
+    display: block;
     font-size: 2rem;
+    text-align: center;
+    transform: translateY(-90px);
+}
+.pie__text-value > span {
+    font-size: 1rem;
 }
 .pie__container {
     text-align: center;

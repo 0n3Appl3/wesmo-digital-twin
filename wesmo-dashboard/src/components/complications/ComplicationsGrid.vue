@@ -27,8 +27,9 @@ export default {
             },
             pie: {
                 text: 'Test Component',
-                current: 0.37,
-                max: 1,
+                current: 37,
+                max: 100,
+                suffix: '%',
             }
         }
     },
@@ -55,7 +56,7 @@ export default {
                 <StatusVisual :text-value="status.text" :status-value="status.status" :state-value="status.state"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1">
-                <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" />
+                <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" :text-suffix="pie.suffix"/>
             </ComplicationTemplate>
         </div>
     </div>
