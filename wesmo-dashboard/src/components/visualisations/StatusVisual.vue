@@ -81,6 +81,8 @@ export default {
     font-size: 2.2rem;
     padding: 0.2rem;
     border-radius: 50%;
+    box-shadow:  3px 3px 6px #bcbcbc,
+            -3px -3px 6px #fefefe;
 }
 .status__text-label {
     font-size: 0.9rem;
