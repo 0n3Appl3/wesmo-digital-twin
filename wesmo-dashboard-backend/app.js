@@ -1,3 +1,6 @@
+const dotenv = require('dotenv').config({
+    path: __dirname + '/../.env',
+})
 const express = require('express')
 const app = express()
 const port = 3000
@@ -7,7 +10,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/test', (req, res) => {
-    res.send('Test')
+    res.send('Test: ' + process.env.TEST)
 })
 
 app.listen(port, () => {
