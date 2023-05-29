@@ -1,0 +1,14 @@
+{
+  "name": "wesmo-dashboard-backend",
+  "version": "1.0.0",
+  "description": "WESMO Dashboard back-end for REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jedd Lupoy",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
