@@ -21,14 +21,12 @@ export default {
 	methods: {
 		// Testing REST API
 		test() {
-			alert('test: ' + import.meta.env.VITE_TEST)
-			fetch('http://127.0.0.1:3000/test')
+			fetch(import.meta.env.VITE_BACKEND_URL + '/test')
 			.then(response => {
 				return response.json()
 			})
 			.then(data => {
 				// Testing response
-				alert(data.test)
 				console.log(data)
 			})
 		}
