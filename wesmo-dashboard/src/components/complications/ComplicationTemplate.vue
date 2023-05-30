@@ -18,12 +18,27 @@ export default {
 			return this.size == 2 ? 'medium-grid-size' : 'large-grid-size';
 		}
 	},
+	methods: {
+		// Testing REST API
+		test() {
+			alert('test: ' + import.meta.env.VITE_TEST)
+			fetch('http://127.0.0.1:3000/test')
+			.then(response => {
+				return response.json()
+			})
+			.then(data => {
+				// Testing response
+				alert(data.test)
+				console.log(data)
+			})
+		}
+	},
 };
 </script>
 
 <template>
     <div :class="[container, setGridState]">
-		<div :class="wrapper">
+		<div :class="wrapper" @click="test">
 			<slot />
 		</div>
     </div>
