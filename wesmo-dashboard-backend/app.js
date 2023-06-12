@@ -1,13 +1,55 @@
 const dotenv = require('dotenv').config({
     path: __dirname + '/../.env',
 })
+const { Sequelize, QueryTypes } = require('sequelize')
 const cors = require('cors')
 const express = require('express')
 const app = express()
 const port = 3000
 
-// Enable Cross-Origin Resource Sharing
+/*
+ * Create new instance of Sequelize.
+ */
+const sequelize = new Sequelize(
+    process.env.VITE_DB_NAME, 
+    process.env.VITE_DB_USER, 
+    process.env.VITE_DB_PASSWORD,
+    {
+        host: process.env.VITE_DB_HOST,
+        dialect: 'mysql',
+    }
+)
+
+/*
+ * Ensure connection to the database was successful.
+ */
+const authDatabaseConnection = async () => {
+    try {
+        await sequelize.authenticate()
+        console.log('Connection to database has been established successfully.')
+    } catch(error) {
+        console.error('Unable to connect to the database: ', error)
+    }
+}
+
+/* 
+ * Enable Cross-Origin Resource Sharing.
+ */
 app.use(cors())
+
+/*
+ * Listen Express.js instance on a specified port.
+ */
+app.listen(port, () => {
+    console.log(`WESMO Dashboard Backend listening on port ${ port }`)
+    authDatabaseConnection()
+})
+
+//////////////////////////////
+//                          //
+//    REST API Endpoints    //
+//                          //
+//////////////////////////////
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
@@ -20,6 +62,11 @@ app.get('/test', (req, res) => {
     })
 })
 
-app.listen(port, () => {
-    console.log(`WESMO Dashboard Backend listening on port ${ port }`)
+app.get('/rest-test', async (req, res) => {
+    // Raw database query using Sequelize.
+    const result = await sequelize.query('SELECT * from `projects`', {
+        type: QueryTypes.SELECT,
+        raw: true,
+    })
+    res.send(result)
 })
