@@ -1,63 +1,55 @@
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from 'vue'
 import type { CSSProperties } from 'vue';
-export default {
-    props: {
-        textValue: {
-            type: String
-        },
-        currentValue: {
-            type: Number,
-            default: 0,
-        },
-        maxValue: {
-			type: Number,
-			default: 1,
-		}
+
+const props = defineProps({
+    textValue: {
+        type: String,
     },
-    data() {
-        return {
-            label: 'bar__text-label',
-            value: 'bar__text-value',
-            container: 'bar__container',
-        }
+    currentValue: {
+        type: Number,
+        default: 0,
     },
-    computed: {
-		setProgress() {
-			return Math.round((this.currentValue / this.maxValue) * 100);
-		},
-        setColour() {
-            const progress: number = this.setProgress;
-            let colour: string = '';
-            switch(true) {
-                case (progress >= 70):
-                    colour = '#26e35b';
-                    break;
-                case (progress >= 30):
-                    colour = '#efc015';
-                    break;
-                default:
-                    colour = '#e33926';
-                    break;
-            }
-            return colour;
-        },
-        setBarStyle() {
-            const barStyle: CSSProperties = {
-                width: this.setProgress + '%',
-                backgroundColor: this.setColour,
-            }
-            return barStyle;
-        },
-	},
-};
+    maxValue: {
+        type: Number,
+        default: 1,
+    },
+})
+
+const setProgress = computed(() => {
+    return Math.round((props.currentValue / props.maxValue) * 100);
+})
+const setColour = computed(() => {
+    const progress: number = setProgress.value;
+    let colour: string = '';
+    switch(true) {
+        case (progress >= 70):
+            colour = '#26e35b';
+            break;
+        case (progress >= 30):
+            colour = '#efc015';
+            break;
+        default:
+            colour = '#e33926';
+            break;
+    }
+    return colour;
+})
+const setBarStyle = computed(() => {
+    const barStyle: CSSProperties = {
+        width: setProgress.value + '%',
+        backgroundColor: setColour.value,
+    }
+    return barStyle;
+})
 </script>
 
 <template>
     <div>
-        <p :class="label">{{ textValue }}</p>
-        <p :class="value">{{ setProgress + '%' }}</p>
+        <p class="bar__text-label">{{ textValue }}</p>
+        <p class="bar__text-value">{{ setProgress + '%' }}</p>
     </div>
-    <div :class="container">
+    <div class="bar__container">
         <span :style="setBarStyle"></span>
     </div>
 </template>

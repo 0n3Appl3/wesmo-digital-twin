@@ -1,87 +1,78 @@
-<script lang="ts">
-export default {
-    props: {
-        textValue: {
-            type: String
-        },
-        currentValue: {
-            type: Number,
-            default: 0,
-        },
-        maxValue: {
-			type: Number,
-			default: 100,
-		},
-        textSuffix: {
-            type: String,
-        },
-        safeThreshold: {
-            type: Number,
-            default: 55,
-        },
-        warningThreshold: {
-            type: Number,
-            default: 80,
-        },
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+    textValue: {
+        type: String
     },
-    data() {
-        return {
-            wrapper: 'pie__wrapper',
-            progress: 'pie__progress',
-            label: 'pie__text-label',
-            value: 'pie__text-value',
-            container: 'pie__container',
-            halfPieSize: 50,
-        }
+    currentValue: {
+        type: Number,
+        default: 0,
     },
-    computed: {
-		setProgress() {
-			return Math.round((this.currentValue / this.maxValue) * 100);
-		},
-        setPieColour() {
-            const progress: number = this.setProgress;
-            let pieColour: string = '';
-            switch(true) {
-                case (progress <= this.safeThreshold):
-                    pieColour = '#26e35b';
-                    break;
-                case (progress > this.safeThreshold && progress <= this.warningThreshold):
-                    pieColour = '#efc015';
-                    break;
-                default:
-                    pieColour = '#d95243';
-                    break;
-            }
-            return pieColour;
-        },
-        setColour() {
-            let colour: string = '';
-            if (this.setProgress <= this.halfPieSize) {
-                colour = '#ddd';
-            } else {
-                colour = this.setPieColour;
-            }
-            return colour;
-        },
-        setPieSize() {
-            let rotationValue: number = 0;
-            if (this.setProgress <= this.halfPieSize) {
-                rotationValue = (100 - (50 - this.setProgress)) / 100 * 360 * -1;
-            } else {
-                rotationValue = (100 - this.setProgress) / 100 * 360;
-            }
-            return rotationValue + 'deg';
-        },
-	},
-};
+    maxValue: {
+        type: Number,
+        default: 100,
+    },
+    textSuffix: {
+        type: String,
+    },
+    safeThreshold: {
+        type: Number,
+        default: 55,
+    },
+    warningThreshold: {
+        type: Number,
+        default: 80,
+    },
+})
+
+const halfPieSize = ref(50)
+
+const setProgress = computed(() => {
+    return Math.round((props.currentValue / props.maxValue) * 100);
+})
+const setPieColour = computed(() => {
+    const progress: number = setProgress.value;
+    let pieColour: string = '';
+    switch(true) {
+        case (progress <= props.safeThreshold):
+            pieColour = '#26e35b';
+            break;
+        case (progress > props.safeThreshold && progress <= props.warningThreshold):
+            pieColour = '#efc015';
+            break;
+        default:
+            pieColour = '#d95243';
+            break;
+    }
+    return pieColour;
+})
+const setColour = computed(() => {
+    let colour: string = '';
+    if (setProgress.value <= halfPieSize.value) {
+        colour = '#ddd';
+    } else {
+        colour = setPieColour.value;
+    }
+    return colour;
+})
+const setPieSize = computed(() => {
+    let rotationValue: number = 0;
+    if (setProgress.value <= halfPieSize.value) {
+        rotationValue = (100 - (50 - setProgress.value)) / 100 * 360 * -1;
+    } else {
+        rotationValue = (100 - setProgress.value) / 100 * 360;
+    }
+    return rotationValue + 'deg';
+})
 </script>
 
 <template>
-    <div :class="container">
-        <div :class="[wrapper, progress]">
-            <span :class="value">{{ setProgress }}<span>{{ textSuffix }}</span></span>
+    <div class="pie__container">
+        <div class="pie__wrapper pie__progress">
+            <span class="pie__text-value">{{ setProgress }}<span>{{ textSuffix }}</span></span>
         </div>
-        <p :class="label">{{ textValue }}</p>
+        <p class="pie__text-label">{{ textValue }}</p>
     </div>
 </template>
 

@@ -1,15 +1,9 @@
-<script lang="ts">
-export default {
-    data() {
-        return {
-            container: 'title-bar__container',
-        }
-    }
-};
+<script setup lang="ts">
+
 </script>
 
 <template>
-    <div :class="container">
+    <div class="title-bar__container">
         <h1>WESMO Battery Dashboard</h1>
     </div>
 </template>

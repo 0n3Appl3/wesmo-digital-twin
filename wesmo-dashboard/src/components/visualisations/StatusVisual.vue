@@ -1,78 +1,72 @@
-<script lang="ts">
+<script setup lang="ts">
+import { computed, shallowRef } from 'vue'
 import { Tick1, Alert2, ArrowDown } from '@iconsans/vue';
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, Component } from 'vue';
 
-export default {
-    props: {
-        textValue: {
-            type: String,
-        },
-        statusValue: {
-            type: String,
-        },
-        stateValue: {
-            type: Number,
-            default: 0,
-        }
+const props = defineProps({
+    textValue: {
+        type: String,
     },
-    data() {
-        return {
-            icons: ['Tick1', 'Alert2', 'ArrowDown'],
-            icon: 'status__icon',
-            label: 'status__text-label',
-            status: 'status__text-status',
-            container: 'status__container',
-        }
+    statusValue: {
+        type: String,
     },
-    computed: {
-        setState() {
-            let icon: string = '';
-            switch(this.stateValue) {
-                case 1:
-                    icon = this.icons[0];
-                    break;
-                case 3:
-                    icon = this.icons[2];
-                    break;
-                case 2:
-                default:
-                    icon = this.icons[1];
-                    break;
-            }
-            return icon;
-        },
-        setStateColour() {
-            let colour: string = '';
-            switch(this.stateValue) {
-                case 1:
-                    colour = '#26e35b';
-                    break;
-                case 3:
-                    colour = '#d95243';
-                    break;
-                case 2:
-                default:
-                    colour = '#efc015';
-                    break;
-            }
-            return colour;
-        },
-        setIconStyle() {
-            const iconStyle: CSSProperties = {
-                backgroundColor: this.setStateColour,
-            }
-            return iconStyle;
-        },
+    stateValue: {
+        type: Number,
+        default: 0,
     },
-    components: { Tick1, Alert2, ArrowDown }
-};
+})
+
+const icons = shallowRef([
+    Tick1,
+    Alert2,
+    ArrowDown,
+])
+
+const setState = computed(() => {
+    let icon: Component;
+    switch(props.stateValue) {
+        case 1:
+            icon = icons.value[0];
+            break;
+        case 3:
+            icon = icons.value[2];
+            break;
+        case 2:
+        default:
+            icon = icons.value[1];
+            break;
+    }
+    return icon;
+})
+const setStateColour = computed(() => {
+    let colour: string = '';
+    switch(props.stateValue) {
+        case 1:
+            colour = '#26e35b';
+            break;
+        case 3:
+            colour = '#d95243';
+            break;
+        case 2:
+        default:
+            colour = '#efc015';
+            break;
+    }
+    return colour;
+})
+const setIconStyle = computed(() => {
+    const iconStyle: CSSProperties = {
+        backgroundColor: setStateColour.value,
+    }
+    return iconStyle;
+})
 </script>
 
 <template>
-    <div :class="container">
-        <component :is="setState" :class="icon" :style="setIconStyle" />
-        <p :class="status">{{ statusValue }}</p>
-        <p :class="label">{{ textValue }}</p>
+    <div class="status__container">
+        <component :is="setState" class="status__icon" :style="setIconStyle" />
+        <p class="status__text-status">{{ statusValue }}</p>
+        <p class="status__text-label">{{ textValue }}</p>
     </div>
 </template>
 

@@ -1,37 +1,26 @@
-<script lang="ts">
+<script setup lang="ts">
 import { InformationSquare } from '@iconsans/vue'
 
-export default {
-    props: {
-        textValue: {
-            type: String,
-        },
-        numberValue: {
-            type: Number,
-            default: 0,
-        },
-        textSuffix: {
-            type: String,
-            default: '',
-        }
+defineProps({
+    textValue: {
+        type: String,
     },
-    data() {
-        return {
-            icon: 'number__icon',
-            label: 'number__text-label',
-            value: 'number__text-value',
-            container: 'number__container',
-        }
+    numberValue: {
+        type: Number,
+        default: 0,
     },
-    components: { InformationSquare }
-};
+    textSuffix: {
+        type: String,
+        default: '',
+    },
+})
 </script>
 
 <template>
-    <div :class="container">
-        <InformationSquare :class="icon"/>
-        <p :class="value">{{ numberValue }}<span>{{ textSuffix }}</span></p>
-        <p :class="label">{{ textValue }}</p>
+    <div class="number__container">
+        <InformationSquare class="number__icon"/>
+        <p class="number__text-value">{{ numberValue }}<span>{{ textSuffix }}</span></p>
+        <p class="number__text-label">{{ textValue }}</p>
     </div>
 </template>
 

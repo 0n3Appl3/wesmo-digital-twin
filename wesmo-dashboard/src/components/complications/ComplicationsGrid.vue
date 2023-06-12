@@ -1,45 +1,37 @@
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue'
 import BarVisual from '../visualisations/BarVisual.vue';
 import NumberVisual from '../visualisations/NumberVisual.vue';
 import PieVisual from '../visualisations/PieVisual.vue';
 import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 
-export default {
-    data() {
-        return {
-            container: 'grid__container',
-            grid: 'grid',
-            bar: {
-                text: 'Test Component',
-                current: 0.47,
-                max: 1,
-            },
-            number: {
-                text: 'Test Component',
-                value: 1234,
-                suffix: 'test',
-            },
-            status: {
-                text: 'Test Component',
-                status: 'Normal',
-                state: 1,
-            },
-            pie: {
-                text: 'Test Component',
-                current: 37,
-                max: 100,
-                suffix: '%',
-            }
-        }
-    },
-    components: { ComplicationTemplate, BarVisual, NumberVisual, StatusVisual, PieVisual }
-};
+const bar = ref({
+    text: 'Test Component',
+    current: 0.47,
+    max: 1,
+})
+const number = ref({
+    text: 'Test Component',
+    value: 1234,
+    suffix: 'test',
+})
+const status = ref({
+    text: 'Test Component',
+    status: 'Normal',
+    state: 1, 
+})
+const pie = ref({
+    text: 'Test Component',
+    current: 37,
+    max: 100,
+    suffix: '%',  
+})
 </script>
 
 <template>
-    <div :class="container">
-        <div :class="grid">
+    <div class="grid__container">
+        <div class="grid">
             <ComplicationTemplate :size="1">
                 <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
             </ComplicationTemplate>

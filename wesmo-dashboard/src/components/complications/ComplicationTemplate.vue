@@ -1,37 +1,32 @@
-<script lang="ts">
-export default {
-    props: {
-        size: {
-			type: Number,
-			default: 1,
-		}
-    },
-    data() {
-        return {
-			wrapper: 'wrapper',
-            container: 'complication__container',
-        }
-    },
-	computed: {
-		setGridState() {
-			if (this.size == 1) return;
-			return this.size == 2 ? 'medium-grid-size' : 'large-grid-size';
-		}
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+	size: {
+		type: Number,
+		default: 1,
 	},
-	methods: {
-		// Testing REST API
-		test() {
-			fetch(import.meta.env.VITE_BACKEND_URL + '/test')
-			.then(response => {
-				return response.json()
-			})
-			.then(data => {
-				// Testing response
-				console.log(data)
-			})
-		}
-	},
-};
+})
+
+const wrapper = ref('wrapper')
+const container = ref('complication__container')
+
+const setGridState = computed(() => {
+	if (props.size == 1) return;
+	return props.size == 2 ? 'medium-grid-size' : 'large-grid-size';
+})
+
+const test = () => {
+	// Testing REST API
+	fetch(import.meta.env.VITE_BACKEND_URL + '/test')
+	.then(response => {
+		return response.json()
+	})
+	.then(data => {
+		// Testing response
+		console.log(data)
+	})
+}
 </script>
 
 <template>
@@ -53,21 +48,17 @@ export default {
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
 				-10px -10px 30px var(--white-box-shadow-2);
 }
-
 .complication__container:hover {
 	box-shadow: inset 10px 10px 30px var(--white-box-shadow-1),
 				inset -10px -10px 30px var(--white-box-shadow-2);
 	cursor: pointer;
 }
-
 .complication__container:hover > .wrapper {
 	transform: scale(0.97);
 }
-
 .medium-grid-size {
 	grid-column: auto / span 2;
 }
-
 .large-grid-size {
 	grid-column: auto / span 3;
 	grid-row: auto / span 2;
