@@ -48,7 +48,13 @@ const Category = sequelize.define('category', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-    }
+    },
+})
+
+Category.afterCreate(async (category, options) => {
+    console.log('--------\n\n')
+    console.log(category.dataValues)
+    console.log('\n\n--------\n')
 })
 
 /* 
@@ -92,6 +98,16 @@ app.get('/rest-test-2', async (req, res) => {
         order: [
             ['id', 'DESC'],
         ],
+    })
+    res.send(result)
+})
+
+app.get('/rest-test-3', async (req, res) => {
+    // req.body will be used later.
+    // let data = req.body
+    const result = await Category.create({
+        id: 13,
+        name: 'Test',
     })
     res.send(result)
 })
