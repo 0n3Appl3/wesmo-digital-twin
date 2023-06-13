@@ -15,6 +15,7 @@
   "dependencies": {
     "@iconsans/vue": "^0.1.2",
     "dotenv": "^16.1.0",
+    "mysql-events": "^0.0.11",
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

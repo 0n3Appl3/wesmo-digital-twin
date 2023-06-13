@@ -1,7 +1,7 @@
 const dotenv = require('dotenv').config({
     path: __dirname + '/../.env',
 })
-const { Sequelize, QueryTypes } = require('sequelize')
+const { Sequelize, DataTypes, } = require('sequelize')
 const cors = require('cors')
 const express = require('express')
 const app = express()
@@ -17,6 +17,10 @@ const sequelize = new Sequelize(
     {
         host: process.env.VITE_DB_HOST,
         dialect: 'mysql',
+        define: {
+            freezeTableName: true,
+            timestamps: false,
+        }
     }
 )
 
@@ -31,6 +35,21 @@ const authDatabaseConnection = async () => {
         console.error('Unable to connect to the database: ', error)
     }
 }
+
+/*
+ * Category Model (test model)
+ */
+const Category = sequelize.define('category', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
+})
 
 /* 
  * Enable Cross-Origin Resource Sharing.
@@ -64,9 +83,15 @@ app.get('/test', (req, res) => {
 
 app.get('/rest-test', async (req, res) => {
     // Raw database query using Sequelize.
-    const result = await sequelize.query('SELECT * from `projects`', {
-        type: QueryTypes.SELECT,
-        raw: true,
+    const result = await Category.findAll()
+    res.send(result)
+})
+
+app.get('/rest-test-2', async (req, res) => {
+    const result = await Category.findOne({
+        order: [
+            ['id', 'DESC'],
+        ],
     })
     res.send(result)
 })
