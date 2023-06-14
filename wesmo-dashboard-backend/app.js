@@ -12,6 +12,8 @@ const appContext = 'api'
 const appVersion = 'v1'
 const prefix =  '/' + appContext + '/' + appVersion
 
+let responseData = null
+
 /*
  * Create new instance of Sequelize.
  */
@@ -60,6 +62,7 @@ Category.afterCreate(async (category, options) => {
     console.log('--------\n\n')
     console.log(category.dataValues)
     console.log('\n\n--------\n')
+    responseData = category.dataValues
 })
 
 /* 
@@ -82,10 +85,14 @@ app.listen(port, () => {
 //////////////////////////////
 
 app.get(prefix + '/test', (req, res) => {
-    console.log('Incoming request...')
-    res.status(200).json({
-        test: process.env.VITE_TEST
-    })
+    if (!responseData) {
+        return res.status(204).json({
+            status: 'Fail',
+            message: 'No new data found',
+        })
+    }
+    res.status(200).json(responseData)
+    responseData = null
 })
 
 app.get(prefix + '/rest-test', async (req, res) => {
