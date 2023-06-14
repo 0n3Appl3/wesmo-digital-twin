@@ -7,6 +7,11 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+// REST API endpoint naming properties.
+const appContext = 'api'
+const appVersion = 'v1'
+const prefix =  '/' + appContext + '/' + appVersion
+
 /*
  * Create new instance of Sequelize.
  */
@@ -76,38 +81,54 @@ app.listen(port, () => {
 //                          //
 //////////////////////////////
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-
-app.get('/test', (req, res) => {
+app.get(prefix + '/test', (req, res) => {
     console.log('Incoming request...')
-    res.send({
+    res.status(200).json({
         test: process.env.VITE_TEST
     })
 })
 
-app.get('/rest-test', async (req, res) => {
-    // Raw database query using Sequelize.
+app.get(prefix + '/rest-test', async (req, res) => {
     const result = await Category.findAll()
-    res.send(result)
+
+    if (!result) {
+        return res.status(404).json({
+            status: 'Fail',
+            message: 'No results found'
+        })
+    }
+    res.status(200).json(result)
 })
 
-app.get('/rest-test-2', async (req, res) => {
+app.get(prefix + '/rest-test-2', async (req, res) => {
     const result = await Category.findOne({
         order: [
             ['id', 'DESC'],
         ],
     })
-    res.send(result)
+    res.status(200).json(result)
 })
 
-app.get('/rest-test-3', async (req, res) => {
+app.get(prefix + '/rest-test-3', async (req, res) => {
     // req.body will be used later.
     // let data = req.body
-    const result = await Category.create({
-        id: 13,
-        name: 'Test',
+    try {
+        const result = await Category.create({
+            id: 13,
+            name: 'Test',
+        })
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json({
+            status: 'Error',
+            message: error.message,
+        })
+    }
+})
+
+app.all('*', (req, res) => {
+    res.status(404).json({
+        status: 'Fail',
+        message: `The endpoint ${ req.originalUrl } does not exist`,
     })
-    res.send(result)
 })

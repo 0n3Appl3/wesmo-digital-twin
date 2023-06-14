@@ -18,7 +18,7 @@ const setGridState = computed(() => {
 
 const test = () => {
 	// Testing REST API
-	fetch(import.meta.env.VITE_BACKEND_URL + '/rest-test-2')
+	fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/rest-test-2')
 	.then(response => {
 		return response.json()
 	})
