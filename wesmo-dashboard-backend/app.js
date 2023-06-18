@@ -2,6 +2,7 @@ const dotenv = require('dotenv').config({
     path: __dirname + '/../.env',
 })
 const { Sequelize, DataTypes, } = require('sequelize')
+const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const app = express()
@@ -78,6 +79,11 @@ app.listen(port, () => {
     authDatabaseConnection()
 })
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+    extended: false,
+}))
+
 //////////////////////////////
 //                          //
 //    REST API Endpoints    //
@@ -116,18 +122,16 @@ app.get(prefix + '/rest-test-2', async (req, res) => {
     res.status(200).json(result)
 })
 
-app.get(prefix + '/rest-test-3', async (req, res) => {
-    // req.body will be used later.
-    // let data = req.body
+app.post(prefix + '/rest-test-3', async (req, res) => {
     try {
         const result = await Category.create({
-            id: 13,
-            name: 'Test',
+            id: req.body.id,
+            name: req.body.name,
         })
         res.status(200).json(result)
     } catch (error) {
-        res.status(500).json({
-            status: 'Error',
+        res.status(400).json({
+            status: 'Bad Request',
             message: error.message,
         })
     }
