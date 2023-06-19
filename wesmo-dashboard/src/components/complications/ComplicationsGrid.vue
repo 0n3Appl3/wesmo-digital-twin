@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import BarVisual from '../visualisations/BarVisual.vue';
 import NumberVisual from '../visualisations/NumberVisual.vue';
 import PieVisual from '../visualisations/PieVisual.vue';
@@ -27,9 +27,42 @@ const pie = ref({
     max: 100,
     suffix: '%',  
 })
+/*
+ * Note: Polling interval is 60,000 milliseconds (1 minute). Not an ideal scenario for an application that
+ * needs to be as close to real-time as possible. Might consider looking into other options later.
+ * Alternative solution: WebSockets
+ */
+const pollingDelay = ref(60000)
+let placeholder = ref('placeholder')
+
+onMounted(() => {
+    checkForNewData()
+})
+
+/*
+ * Note: setTimeout is better than setInterval because if the server happens to be slow, I could
+ * have multiple pending requests because setInterval executes after a set amount of time has elapsed
+ * whether the previous calls have been fulfilled or not.
+ */
+const checkForNewData = () => {
+    setTimeout(async () => {
+        const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test')
+        switch(response.status) {
+            case 200:
+                placeholder.value = await response.json()
+                break;
+            case 204:
+                break;
+            default:
+                break;
+        }
+        checkForNewData()
+    }, pollingDelay.value)
+}
 </script>
 
 <template>
+    <p>{{ placeholder }}</p>
     <div class="grid__container">
         <div class="grid">
             <ComplicationTemplate :size="1">
