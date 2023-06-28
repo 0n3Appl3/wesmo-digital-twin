@@ -92,10 +92,7 @@ app.use(bodyParser.urlencoded({
 
 app.get(prefix + '/test', (req, res) => {
     if (!responseData) {
-        return res.status(204).json({
-            status: 'Fail',
-            message: 'No new data found',
-        })
+        return res.status(204).send()
     }
     res.status(200).json(responseData)
     responseData = null
