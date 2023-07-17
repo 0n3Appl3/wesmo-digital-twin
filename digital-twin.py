@@ -1,58 +1,95 @@
-import os
-import requests
-import numpy as np
-import matplotlib.pyplot as plt
 from dotenv.main import load_dotenv
-from sklearn.datasets import load_diabetes
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_percentage_error, mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import os
+import mysql.connector
+import requests
 
-def main():
-    # Test retrieving data from database.
-    url_post = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test"
+# Testing mysql library (not relevant to requests library)
+db = mysql.connector.connect(
+    host=os.environ.get('VITE_DB_HOST'),
+    user=os.environ.get('VITE_DB_USER'),
+    password=os.environ.get('VITE_DB_PASSWORD'),
+)
+
+def save_result(result):
+    # Example data JSON (not actual one)
+    new_data = {
+        "<column-1>": 0,
+        "<column-2>": result,
+    }
+    # Example REST API endpoint (not actual one)
+    url_post = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test-3"
     headers = {
         "content-type": "application/json",
     }
-    get_response = requests.get(url_post, headers=headers)
+    # Send POST request.
+    post_response = requests.post(url_post, json=new_data, headers=headers)
+    post_response_json = post_response.json()
+    print(post_response_json)
+
+def main():
+    # Get data
+    url_get = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test"
+    get_response = requests.get(url_get)
     get_response_json = get_response.json()
-    print(get_response_json)
+    predict_model(get_response_json)
 
-    # Load diabetes data (test).
-    X, y = load_diabetes(return_X_y=True)
-    # Show that the data has been loaded correctly.
-    print(X.shape)
-    print(X[0])
+def predict_model(json):
+    # Read data
+    df = pd.DataFrame(json)
 
-    # Extract column at index 2.
-    X = X[:, 2]
-    print(X.shape)
-    # Reshape to a 2D array.
+    # DEVELOPMENT ONLY - Display data retrieved from REST API endpoint.
+    #print(df.to_string())
+    #return
+
+    # Target
+    target_column = ['<insert target column>']
+
+    X = df['<insert parameter column>'].values
+    y = df[target_column].values.ravel()
+
     X = X.reshape((-1, 1))
-    print(X.shape)
+    y = y.reshape((-1, 1))
 
-    # Split data into training and test data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    # Split data into train and test.
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
-    # Create Linear Regression model and train with the train data.
+    # Scale the data
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+    scaler.fit(y_train)
+    X_train_scaled = scaler.transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    y_train_scaled = scaler.transform(y_train)
+    y_test_scaled = scaler.transform(y_test)
+
+    # Apply linear regression using train data.
     model = LinearRegression()
-    model.fit(X_train, y_train)
+    model.fit(X_train_scaled, y_train_scaled)
 
-    # Predict using test data after training.
-    y_pred = model.predict(X_test)
-    print(y_test)
-    print(y_pred)
-    # Metric to compare how close are the predicted vs actual values
-    # Currently returns a large MSE. Possibly check for outliers (standardscaler), check parameters.
-    print("Mean squared error: %.2f" % mean_squared_error(y_test, y_pred))
+    # Make prediction using test data.
+    y_pred = model.predict(X_test_scaled)
+    #print(y_pred)
+    single_pred = model.predict(X_test_scaled[0].reshape(-1, 1))
+    save_result(single_pred)
 
-    # Create scatter plot and display.
-    plt.scatter(X_test, y_test, color="black")
-    plt.plot(X_test, y_pred, color="blue", linewidth=3)
-    plt.xlabel("Scaled BMIs")
-    plt.ylabel("Disease Progression")
-    plt.title("A Graph Plot Showing Diabetes Progression Against BMI")
+    # DEVELOPMENT ONLY - Show scatter plot of the data.
+    plt.scatter(X_test_scaled, y_test_scaled, color="black")
+    plt.plot(X_test_scaled, y_pred, color="blue", linewidth=3)
     plt.show()
+
+    # DEVELOPMENT ONLY - Examples of metrics.
+    print("Mean squared error: %.2f" % mean_squared_error(y_test_scaled, y_pred))
+    print("Coefficient of determination: %.2f" % r2_score(y_test_scaled, y_pred))
+    print("Accuracy on training set: {:.2f}".format(model.score(X_train_scaled, y_train_scaled)))
+    print("Accuracy on test set: {:.2f}".format(model.score(X_test_scaled, y_test_scaled)))
+    print("Mean absolute percentage error: %.2f" % mean_absolute_percentage_error(y_test_scaled, y_pred))
 
 if __name__ == "__main__":
     load_dotenv()
