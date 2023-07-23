@@ -1,6 +1,6 @@
 from dotenv.main import load_dotenv
 from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_percentage_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
@@ -20,7 +20,7 @@ db = mysql.connector.connect(
 def save_result(result):
     # Example data JSON (not actual one)
     new_data = {
-        "<column-1>": 0,
+        "id": "null",
         "<column-2>": result,
     }
     # Example REST API endpoint (not actual one)
@@ -90,6 +90,37 @@ def predict_model(json):
     print("Accuracy on training set: {:.2f}".format(model.score(X_train_scaled, y_train_scaled)))
     print("Accuracy on test set: {:.2f}".format(model.score(X_test_scaled, y_test_scaled)))
     print("Mean absolute percentage error: %.2f" % mean_absolute_percentage_error(y_test_scaled, y_pred))
+
+# WORK IN PROGRESS. NOT YET TESTED.
+def predict_polynomial(json):
+    df = pd.DataFrame(json)
+
+    # Target
+    target_column = ['<insert target column>']
+
+    X = df['<insert parameter column>'].values
+    y = df[target_column].values.ravel()
+
+    X = X.reshape((-1, 1))
+    y = y.reshape((-1, 1))
+
+    # Split data into train and test.
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+
+    # Create polynomial features (need to experiment)
+    poly = PolynomialFeatures(degree=2)
+    X_train_poly = poly.fit_transform(X_train)
+    X_test_poly = poly.fit_transform(X_test)
+
+    # Fit the polynomial regression model
+    model = LinearRegression()
+    model.fit(X_train_poly, y_train)
+
+    # Make predictions
+    y_pred = model.predict(X_test_poly)
+
+    # DEVELOPMENT ONLY - Examples of metrics.
+    print("Mean squared error: %.2f" % mean_squared_error(y_test, y_pred, squared=False))
 
 if __name__ == "__main__":
     load_dotenv()
