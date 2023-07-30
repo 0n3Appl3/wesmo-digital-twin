@@ -42,14 +42,14 @@ const setStateColour = computed(() => {
     let colour: string = '';
     switch(props.stateValue) {
         case 1:
-            colour = '#26e35b';
+            colour = '#15efa1';
             break;
         case 3:
-            colour = '#d95243';
+            colour = '#ffcc68';
             break;
         case 2:
         default:
-            colour = '#efc015';
+            colour = '#ff7272';
             break;
     }
     return colour;
@@ -72,6 +72,7 @@ const setIconStyle = computed(() => {
 
 <style scoped>
 .status__icon {
+    color: var(--color-text);
     font-size: 2.2rem;
     padding: 0.2rem;
     border-radius: 50%;

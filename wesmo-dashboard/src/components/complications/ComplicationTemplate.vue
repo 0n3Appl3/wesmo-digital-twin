@@ -6,6 +6,14 @@ const props = defineProps({
 		type: Number,
 		default: 1,
 	},
+	bkg: {
+		type: String,
+		default: '#ffffff',
+	},
+	lightText: {
+		type: Boolean,
+		default: false,
+	}
 })
 
 const wrapper = ref('wrapper')
@@ -14,6 +22,11 @@ const container = ref('complication__container')
 const setGridState = computed(() => {
 	if (props.size == 1) return;
 	return props.size == 2 ? 'medium-grid-size' : 'large-grid-size';
+})
+
+const setTextLight = computed(() => {
+	if (!props.lightText) return;
+	return 'text--light';
 })
 
 const test = () => {
@@ -30,7 +43,7 @@ const test = () => {
 </script>
 
 <template>
-    <div :class="[container, setGridState]">
+    <div :class="[container, setGridState, setTextLight]" :style="{ backgroundColor: bkg }">
 		<div :class="wrapper" @click="test">
 			<slot />
 		</div>
@@ -50,19 +63,22 @@ const test = () => {
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
 				-10px -10px 30px var(--white-box-shadow-2);
 }
-.complication__container:hover {
+/* .complication__container:hover {
 	box-shadow: inset 10px 10px 30px var(--white-box-shadow-1),
 				inset -10px -10px 30px var(--white-box-shadow-2);
 	cursor: pointer;
 }
 .complication__container:hover > .wrapper {
 	transform: scale(0.97);
-}
+} */
 .medium-grid-size {
 	grid-column: auto / span 2;
 }
 .large-grid-size {
 	grid-column: auto / span 3;
 	grid-row: auto / span 2;
+}
+.text--light {
+	color: #ededed;
 }
 </style>

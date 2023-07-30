@@ -24,13 +24,13 @@ const setColour = computed(() => {
     let colour: string = '';
     switch(true) {
         case (progress >= 70):
-            colour = '#26e35b';
+            colour = '#15efa1';
             break;
         case (progress >= 30):
-            colour = '#efc015';
+            colour = '#ffcc68';
             break;
         default:
-            colour = '#e33926';
+            colour = '#ff7272';
             break;
     }
     return colour;
@@ -74,7 +74,7 @@ const setBarStyle = computed(() => {
     position: relative;
     overflow: hidden;
     height: 100%;
-    background-color: #efc015;
+    background-color: #ffcc68;
     border-radius: 1rem;
 }
 </style>
