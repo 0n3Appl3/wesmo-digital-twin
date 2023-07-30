@@ -68,8 +68,6 @@ const setBarStyle = computed(() => {
     height: 1.3rem;
     border-radius: 1rem;
     background-color: #ddd;
-    box-shadow:  5px 5px 10px #bcbcbc,
-             -5px -5px 10px #fefefe;
 }
 .bar__container > span {
     display: block;
@@ -77,8 +75,6 @@ const setBarStyle = computed(() => {
     overflow: hidden;
     height: 100%;
     background-color: #efc015;
-    box-shadow:  5px 5px 10px #bcbcbc,
-            -5px -5px 10px #fefefe;
     border-radius: 1rem;
 }
 </style>

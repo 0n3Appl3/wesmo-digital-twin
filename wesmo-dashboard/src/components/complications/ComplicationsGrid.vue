@@ -71,17 +71,19 @@ const checkForNewData = () => {
             <ComplicationTemplate :size="1">
                 <NumberVisual :text-value="number.text" :number-value="number.value" :text-suffix="number.suffix"/>
             </ComplicationTemplate>
-            <ComplicationTemplate :size="2">
-                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
-            </ComplicationTemplate>
-            <ComplicationTemplate :size="3">
-                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
-            </ComplicationTemplate>
             <ComplicationTemplate :size="1">
                 <StatusVisual :text-value="status.text" :status-value="status.status" :state-value="status.state"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1">
                 <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" :text-suffix="pie.suffix"/>
+            </ComplicationTemplate>
+            <ComplicationTemplate :size="2">
+                <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" :text-suffix="pie.suffix"/>
+                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
+            </ComplicationTemplate>
+            <ComplicationTemplate :size="2">
+                <NumberVisual :text-value="number.text" :number-value="number.value" :text-suffix="number.suffix"/>
+                <NumberVisual :text-value="number.text" :number-value="number.value" :text-suffix="number.suffix"/>
             </ComplicationTemplate>
         </div>
     </div>

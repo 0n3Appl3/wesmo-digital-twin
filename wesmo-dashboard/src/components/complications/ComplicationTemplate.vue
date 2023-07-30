@@ -41,10 +41,12 @@ const test = () => {
 .complication__container {
 	display: flex;
 	flex-direction: column;
+	/* flex-direction: row; */
 	justify-content: center;
-	align-items: left;
+	/* justify-content: space-between; */
+	/* align-items: left; */
 	padding: 0.8rem;
-	border-radius: 2rem;
+	border-radius: 1rem;
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
 				-10px -10px 30px var(--white-box-shadow-2);
 }

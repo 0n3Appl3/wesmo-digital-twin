@@ -87,8 +87,6 @@ const setPieSize = computed(() => {
     aspect-ratio: 1;
     margin: auto;
     margin-bottom: 0.5rem;
-    box-shadow:  8px 8px 16px #bcbcbc,
-            -8px -8px 16px #fefefe;
     overflow: hidden;
 }
 .pie__wrapper:before {

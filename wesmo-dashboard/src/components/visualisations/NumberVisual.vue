@@ -18,9 +18,11 @@ defineProps({
 
 <template>
     <div class="number__container">
-        <InformationSquare class="number__icon"/>
+        <!-- <InformationSquare class="number__icon"/> -->
+        <p class="number__text-label">{{ textValue }}</p>
         <p class="number__text-value">{{ numberValue }}<span>{{ textSuffix }}</span></p>
         <p class="number__text-label">{{ textValue }}</p>
+        <p class="number__text-value">{{ numberValue }}<span>{{ textSuffix }}</span></p>
     </div>
 </template>
 
