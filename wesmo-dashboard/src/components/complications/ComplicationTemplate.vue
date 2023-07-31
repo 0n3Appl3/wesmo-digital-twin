@@ -44,24 +44,25 @@ const test = () => {
 
 <template>
     <div :class="[container, setGridState, setTextLight]" :style="{ backgroundColor: bkg }">
-		<div :class="wrapper" @click="test">
-			<slot />
-		</div>
+		<slot />
     </div>
 </template>
 
 <style scoped>
 .complication__container {
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: auto auto;
+	/* flex-direction: column; */
 	/* flex-direction: row; */
-	justify-content: center;
+	/* justify-content: center; */
 	/* justify-content: space-between; */
 	/* align-items: left; */
+	align-items: center;
+	justify-items: stretch;
 	padding: 0.8rem;
 	border-radius: 1rem;
-	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
-				-10px -10px 30px var(--white-box-shadow-2);
+	box-shadow: 10px 10px 25px var(--white-box-shadow-1),
+				-10px -10px 25px var(--white-box-shadow-2);
 }
 /* .complication__container:hover {
 	box-shadow: inset 10px 10px 30px var(--white-box-shadow-1),

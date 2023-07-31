@@ -46,11 +46,13 @@ const setBarStyle = computed(() => {
 
 <template>
     <div>
-        <p class="bar__text-label">{{ textValue }}</p>
-        <p class="bar__text-value">{{ setProgress + '%' }}</p>
-    </div>
-    <div class="bar__container">
-        <span :style="setBarStyle"></span>
+        <div>
+            <p class="bar__text-label">{{ textValue }}</p>
+            <p class="bar__text-value">{{ setProgress + '%' }}</p>
+        </div>
+        <div class="bar__container">
+            <span :style="setBarStyle"></span>
+        </div>
     </div>
 </template>
 
@@ -67,7 +69,7 @@ const setBarStyle = computed(() => {
     overflow: hidden;
     height: 1.3rem;
     border-radius: 1rem;
-    background-color: #ddd;
+    background-color: #fff;
 }
 .bar__container > span {
     display: block;

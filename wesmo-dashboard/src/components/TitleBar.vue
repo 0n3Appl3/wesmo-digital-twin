@@ -15,7 +15,7 @@
 	justify-content: center;
 	align-items: center;
 	padding: 0.7rem;
-    margin: 2rem 0;
+    /* margin: 2rem 0; */
 	border-radius: 1rem;
 	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
 				-10px -10px 30px var(--white-box-shadow-2);
