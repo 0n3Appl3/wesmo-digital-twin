@@ -78,10 +78,10 @@ const setIconStyle = computed(() => {
     border-radius: 50%;
 }
 .status__text-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 .status__text-status {
-    font-size: 2rem;
+    font-size: 3rem;
     transform: translateY(-10px);
 }
 .status__container {

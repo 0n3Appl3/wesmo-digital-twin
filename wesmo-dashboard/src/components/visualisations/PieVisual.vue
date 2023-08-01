@@ -111,15 +111,15 @@ const setPieSize = computed(() => {
     transform: rotate(v-bind(setPieSize));
 }
 .pie__text-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 .pie__text-value {
     display: inline-block;
-    font-size: 2rem;
-    padding: 1.6rem;
+    font-size: 3rem;
+    padding: 2rem;
     border-radius: 50%;
     text-align: center;
-    transform: translateY(-117px);
+    transform: translateY(-154px);
 }
 .pie__text-value > span {
     font-size: 1rem;

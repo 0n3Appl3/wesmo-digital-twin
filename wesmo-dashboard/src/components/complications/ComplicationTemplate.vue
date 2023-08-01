@@ -16,7 +16,6 @@ const props = defineProps({
 	}
 })
 
-const wrapper = ref('wrapper')
 const container = ref('complication__container')
 
 const setGridState = computed(() => {
@@ -51,29 +50,17 @@ const test = () => {
 <style scoped>
 .complication__container {
 	display: grid;
-	grid-template-columns: auto auto;
-	/* flex-direction: column; */
-	/* flex-direction: row; */
-	/* justify-content: center; */
-	/* justify-content: space-between; */
-	/* align-items: left; */
+	grid-template-columns: auto;
+	gap: 3.1rem;
 	align-items: center;
 	justify-items: stretch;
 	padding: 0.8rem;
 	border-radius: 1rem;
-	box-shadow: 10px 10px 25px var(--white-box-shadow-1),
-				-10px -10px 25px var(--white-box-shadow-2);
+	box-shadow: 10px 10px 25px var(--box-shadow-black);
 }
-/* .complication__container:hover {
-	box-shadow: inset 10px 10px 30px var(--white-box-shadow-1),
-				inset -10px -10px 30px var(--white-box-shadow-2);
-	cursor: pointer;
-}
-.complication__container:hover > .wrapper {
-	transform: scale(0.97);
-} */
 .medium-grid-size {
 	grid-column: auto / span 2;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 .large-grid-size {
 	grid-column: auto / span 3;

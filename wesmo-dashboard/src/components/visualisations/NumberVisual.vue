@@ -1,28 +1,21 @@
 <script setup lang="ts">
-import { InformationSquare } from '@iconsans/vue'
 
 defineProps({
-    textValue: {
-        type: String,
+    parameterOne: {
+        type: Object,
     },
-    numberValue: {
-        type: Number,
-        default: 0,
-    },
-    textSuffix: {
-        type: String,
-        default: '',
-    },
+    parameterTwo: {
+        type: Object,
+    }
 })
 </script>
 
 <template>
     <div class="number__container">
-        <!-- <InformationSquare class="number__icon"/> -->
-        <p class="number__text-label">{{ textValue }}</p>
-        <p class="number__text-value">{{ numberValue }}<span>{{ textSuffix }}</span></p>
-        <p class="number__text-label">{{ textValue }}</p>
-        <p class="number__text-value">{{ numberValue }}<span>{{ textSuffix }}</span></p>
+        <p class="number__text-label">{{ parameterOne?.text }}</p>
+        <p class="number__text-value">{{ parameterOne?.value }}<span>{{ parameterOne?.unit }}</span></p>
+        <p class="number__text-label">{{ parameterTwo?.text }}</p>
+        <p class="number__text-value">{{ parameterTwo?.value }}<span>{{ parameterTwo?.unit }}</span></p>
     </div>
 </template>
 
@@ -31,10 +24,10 @@ defineProps({
     font-size: 1.4rem;
 }
 .number__text-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 .number__text-value {
-    font-size: 2.2rem;
+    font-size: 3rem;
 }
 .number__text-value > span {
     font-size: 0.7rem;

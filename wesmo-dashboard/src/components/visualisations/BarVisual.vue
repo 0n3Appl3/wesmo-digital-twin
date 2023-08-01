@@ -58,10 +58,10 @@ const setBarStyle = computed(() => {
 
 <style scoped>
 .bar__text-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 .bar__text-value {
-    font-size: 2rem;
+    font-size: 3rem;
 }
 .bar__container {
     box-sizing: content-box;

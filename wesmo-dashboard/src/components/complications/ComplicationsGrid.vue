@@ -6,26 +6,64 @@ import PieVisual from '../visualisations/PieVisual.vue';
 import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 
-const bar = ref({
-    text: 'Test Component',
-    current: 0.47,
-    max: 1,
-})
-const number = ref({
-    text: 'Test Component',
-    value: 1234,
-    suffix: 'test',
-})
-const status = ref({
-    text: 'Test Component',
-    status: 'Normal',
-    state: 1, 
-})
-const pie = ref({
-    text: 'Test Component',
-    current: 37,
-    max: 100,
-    suffix: '%',  
+const battery = ref({
+    status: {
+        text: 'Battery Condition',
+        status: 'Normal',
+        state: 1,  
+    },
+    soc: {
+        text: 'State of Charge (SOC)',
+        current: 0.47,
+        max: 1,
+    },
+    predictedSoc : {
+        text: 'Predicted SOC in the next minute',
+        current: 0.44,
+        max: 1,
+    },
+    soh: {
+        text: 'State of Health (SOH)',
+        current: 95,
+        max: 100,
+        suffix: '%',  
+    },
+    ampHour: {
+        text: 'Battery Amp-Hour',
+        value: 1000,
+        unit: 'Ah',
+    },
+    dischargeRate: {
+        text: 'Discharge Rate',
+        value: 12.3,
+        unit: 'A',
+    },
+    avgTemp: {
+        text: 'Average Temperature',
+        current: 37.5,
+        max: 100,
+        suffix: '˚C',  
+    },
+    packVoltage: {
+        text: 'Pack Voltage',
+        value: 12.3,
+        unit: 'V',
+    },
+    packCurrent: {
+        text: 'Pack Current',
+        value: 12.3,
+        unit: 'A',
+    },
+    lowestTemp: {
+        text: 'Lowest Temperature',
+        value: 12.3,
+        unit: '˚C',
+    },
+    highestTemp: {
+        text: 'Highest Temperature',
+        value: 12.3,
+        unit: '˚C',
+    },
 })
 
 const redBkg = ref('#d54646')
@@ -72,24 +110,41 @@ const checkForNewData = () => {
     <div class="grid__container">
         <div class="grid">
             <ComplicationTemplate :size="1" :bkg="redBkg" :light-text="true">
-                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
+                <BarVisual :text-value="battery.soc.text" 
+                           :current-value="battery.soc.current"
+                           :max-value="battery.soc.max"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" :bkg="greyBkgDim">
-                <NumberVisual :text-value="number.text" :number-value="number.value" :text-suffix="number.suffix"/>
+                <NumberVisual :parameter-one="battery.ampHour"
+                              :parameter-two="battery.dischargeRate"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" :bkg="greyBkgDark" :light-text="true">
-                <StatusVisual :text-value="status.text" :status-value="status.status" :state-value="status.state"/>
+                <StatusVisual :text-value="battery.status.text" 
+                              :status-value="battery.status.status" 
+                              :state-value="battery.status.state"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="1" :bkg="greyBkgDim">
-                <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" :text-suffix="pie.suffix" :bkg="greyBkgDim"/>
+                <PieVisual :text-value="battery.avgTemp.text"
+                           :current-value="battery.avgTemp.current" 
+                           :max-value="battery.avgTemp.max" 
+                           :text-suffix="battery.avgTemp.suffix" 
+                           :bkg="greyBkgDim"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="2" :bkg="greyBkgLight">
-                <PieVisual :text-value="pie.text" :current-value="pie.current" :max-value="pie.max" :text-suffix="pie.suffix" :bkg="greyBkgLight"/>
-                <BarVisual :text-value="bar.text" :current-value="bar.current" :max-value="bar.max"/>
+                <PieVisual :text-value="battery.soh.text"
+                           :current-value="battery.soh.current" 
+                           :max-value="battery.soh.max" 
+                           :text-suffix="battery.soh.suffix"
+                           :bkg="greyBkgLight"/>
+                <BarVisual :text-value="battery.predictedSoc.text" 
+                           :current-value="battery.predictedSoc.current" 
+                           :max-value="battery.predictedSoc.max"/>
             </ComplicationTemplate>
             <ComplicationTemplate :size="2" :bkg="greyBkgLight">
-                <NumberVisual :text-value="number.text" :number-value="number.value" :text-suffix="number.suffix"/>
-                <NumberVisual :text-value="number.text" :number-value="number.value" :text-suffix="number.suffix"/>
+                <NumberVisual :parameter-one="battery.packVoltage"
+                              :parameter-two="battery.packCurrent"/>
+                <NumberVisual :parameter-one="battery.lowestTemp"
+                              :parameter-two="battery.highestTemp"/>
             </ComplicationTemplate>
         </div>
     </div>
@@ -104,8 +159,8 @@ const checkForNewData = () => {
 }
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, 12rem);
-    grid-auto-rows: 12rem;
+    grid-template-columns: repeat(4, 15rem);
+    grid-auto-rows: 15rem;
     grid-gap: 1.5rem 1.5rem;
     grid-auto-flow: row dense;
 }
