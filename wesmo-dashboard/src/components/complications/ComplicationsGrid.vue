@@ -5,6 +5,7 @@ import NumberVisual from '../visualisations/NumberVisual.vue';
 import PieVisual from '../visualisations/PieVisual.vue';
 import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
+import RefreshButton from '../RefreshButton.vue';
 
 const battery = ref({
     status: {
@@ -66,6 +67,8 @@ const battery = ref({
     },
 })
 
+const lastUpdated = ref('')
+
 const redBkg = ref('#d54646')
 const greyBkgDark = ref('#555555')
 const greyBkgDim = ref('#d3d3d3')
@@ -80,6 +83,7 @@ const pollingDelay = ref(60000)
 let placeholder = ref('placeholder')
 
 onMounted(() => {
+    lastUpdated.value = new Date().toLocaleTimeString()
     checkForNewData()
 })
 
@@ -94,6 +98,7 @@ const checkForNewData = () => {
         switch(response.status) {
             case 200:
                 placeholder.value = await response.json()
+                lastUpdated.value = new Date().toLocaleTimeString()
                 break;
             case 204:
                 break;
@@ -107,55 +112,65 @@ const checkForNewData = () => {
 
 <template>
     <p>{{ placeholder }}</p>
-    <div class="grid__container">
-        <div class="grid">
-            <ComplicationTemplate :size="1" :bkg="redBkg" :light-text="true">
-                <BarVisual :text-value="battery.soc.text" 
-                           :current-value="battery.soc.current"
-                           :max-value="battery.soc.max"/>
-            </ComplicationTemplate>
-            <ComplicationTemplate :size="1" :bkg="greyBkgDim">
-                <NumberVisual :parameter-one="battery.ampHour"
-                              :parameter-two="battery.dischargeRate"/>
-            </ComplicationTemplate>
-            <ComplicationTemplate :size="1" :bkg="greyBkgDark" :light-text="true">
-                <StatusVisual :text-value="battery.status.text" 
-                              :status-value="battery.status.status" 
-                              :state-value="battery.status.state"/>
-            </ComplicationTemplate>
-            <ComplicationTemplate :size="1" :bkg="greyBkgDim">
-                <PieVisual :text-value="battery.avgTemp.text"
-                           :current-value="battery.avgTemp.current" 
-                           :max-value="battery.avgTemp.max" 
-                           :text-suffix="battery.avgTemp.suffix" 
-                           :bkg="greyBkgDim"/>
-            </ComplicationTemplate>
-            <ComplicationTemplate :size="2" :bkg="greyBkgLight">
-                <PieVisual :text-value="battery.soh.text"
-                           :current-value="battery.soh.current" 
-                           :max-value="battery.soh.max" 
-                           :text-suffix="battery.soh.suffix"
-                           :bkg="greyBkgLight"/>
-                <BarVisual :text-value="battery.predictedSoc.text" 
-                           :current-value="battery.predictedSoc.current" 
-                           :max-value="battery.predictedSoc.max"/>
-            </ComplicationTemplate>
-            <ComplicationTemplate :size="2" :bkg="greyBkgLight">
-                <NumberVisual :parameter-one="battery.packVoltage"
-                              :parameter-two="battery.packCurrent"/>
-                <NumberVisual :parameter-one="battery.lowestTemp"
-                              :parameter-two="battery.highestTemp"/>
-            </ComplicationTemplate>
+    <div class="grid__container-outer">
+        <div class="control__container">
+            <!-- <RefreshButton /> -->
+            <p>test</p>
+            <p>Last Updated &bullet; {{ lastUpdated }}</p>
+        </div>
+        <div class="grid__container">
+            <div class="grid">
+                <ComplicationTemplate :size="1" :bkg="redBkg" :light-text="true">
+                    <BarVisual :text-value="battery.soc.text" 
+                            :current-value="battery.soc.current"
+                            :max-value="battery.soc.max"/>
+                </ComplicationTemplate>
+                <ComplicationTemplate :size="1" :bkg="greyBkgDim">
+                    <NumberVisual :parameter-one="battery.ampHour"
+                                :parameter-two="battery.dischargeRate"/>
+                </ComplicationTemplate>
+                <ComplicationTemplate :size="1" :bkg="greyBkgDark" :light-text="true">
+                    <StatusVisual :text-value="battery.status.text" 
+                                :status-value="battery.status.status" 
+                                :state-value="battery.status.state"/>
+                </ComplicationTemplate>
+                <ComplicationTemplate :size="1" :bkg="greyBkgDim">
+                    <PieVisual :text-value="battery.avgTemp.text"
+                            :current-value="battery.avgTemp.current" 
+                            :max-value="battery.avgTemp.max" 
+                            :text-suffix="battery.avgTemp.suffix" 
+                            :bkg="greyBkgDim"/>
+                </ComplicationTemplate>
+                <ComplicationTemplate :size="2" :bkg="greyBkgLight">
+                    <PieVisual :text-value="battery.soh.text"
+                            :current-value="battery.soh.current" 
+                            :max-value="battery.soh.max" 
+                            :text-suffix="battery.soh.suffix"
+                            :bkg="greyBkgLight"/>
+                    <BarVisual :text-value="battery.predictedSoc.text" 
+                            :current-value="battery.predictedSoc.current" 
+                            :max-value="battery.predictedSoc.max"/>
+                </ComplicationTemplate>
+                <ComplicationTemplate :size="2" :bkg="greyBkgLight">
+                    <NumberVisual :parameter-one="battery.packVoltage"
+                                :parameter-two="battery.packCurrent"/>
+                    <NumberVisual :parameter-one="battery.lowestTemp"
+                                :parameter-two="battery.highestTemp"/>
+                </ComplicationTemplate>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.grid__container-outer {
+    max-width: 1280px;
+    margin: 0 auto;
+}
 .grid__container {
     display: flex;
-    max-width: 1280px;
+    /* max-width: 1280px; */
     justify-content: space-around;
-    margin: 0 auto;
 }
 .grid {
     display: grid;
@@ -163,5 +178,10 @@ const checkForNewData = () => {
     grid-auto-rows: 15rem;
     grid-gap: 1.5rem 1.5rem;
     grid-auto-flow: row dense;
+}
+.control__container {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1.5rem;
 }
 </style>
