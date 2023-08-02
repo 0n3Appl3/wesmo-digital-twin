@@ -114,8 +114,8 @@ const checkForNewData = () => {
     <p>{{ placeholder }}</p>
     <div class="grid__container-outer">
         <div class="control__container">
-            <!-- <RefreshButton /> -->
-            <p>test</p>
+            <RefreshButton />
+            <!-- <p>test</p> -->
             <p>Last Updated &bullet; {{ lastUpdated }}</p>
         </div>
         <div class="grid__container">
