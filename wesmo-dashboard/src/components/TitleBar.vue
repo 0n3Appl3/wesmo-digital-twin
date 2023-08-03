@@ -4,7 +4,7 @@
 
 <template>
     <div class="title-bar__container">
-        <h1>WESMO Battery Dashboard</h1>
+		<img src="/wesmo-logo.png" alt="WESMO Logo"/>
     </div>
 </template>
 
@@ -14,10 +14,9 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	padding: 0.7rem;
-    /* margin: 2rem 0; */
-	border-radius: 1rem;
-	box-shadow: 10px 10px 30px var(--white-box-shadow-1),
-				-10px -10px 30px var(--white-box-shadow-2);
+	padding: 1rem 0;
+}
+.title-bar__container > img {
+	width: 11rem;
 }
 </style>

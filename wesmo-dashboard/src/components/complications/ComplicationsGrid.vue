@@ -111,7 +111,6 @@ const checkForNewData = () => {
 </script>
 
 <template>
-    <p>{{ placeholder }}</p>
     <div class="grid__container-outer">
         <div class="control__container">
             <RefreshButton />
@@ -159,29 +158,31 @@ const checkForNewData = () => {
                 </ComplicationTemplate>
             </div>
         </div>
+        <p>{{ placeholder }}</p>
     </div>
 </template>
 
 <style scoped>
 .grid__container-outer {
-    max-width: 1280px;
+    max-width: 1100px;
     margin: 0 auto;
+    padding-top: 1.5rem;
 }
 .grid__container {
     display: flex;
-    /* max-width: 1280px; */
     justify-content: space-around;
 }
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, 15rem);
-    grid-auto-rows: 15rem;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 1fr;
     grid-gap: 1.5rem 1.5rem;
     grid-auto-flow: row dense;
 }
 .control__container {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 1.5rem;
+    align-items: center;
+    padding-bottom: 1rem;
 }
 </style>

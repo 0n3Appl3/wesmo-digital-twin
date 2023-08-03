@@ -16,12 +16,19 @@ const clicked = () => {
 <style scoped>
 button {
     display: flex;
-    border: none;
+    border: 2px solid #373737;
     border-radius: 10rem;
     padding: 0.5rem 0.7rem;
     background-color: #373737;
     color: #ededed;
-    justify-items:center;
+    justify-items: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+button:hover {
+    cursor: pointer;
+    color: #373737;
+    background-color: #ededed;
 }
 span {
     padding-left: 0.3rem;

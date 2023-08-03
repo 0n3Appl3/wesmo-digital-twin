@@ -30,8 +30,8 @@ defineProps({
     font-size: 3rem;
 }
 .number__text-value > span {
-    font-size: 0.7rem;
-    margin-left: 0.2rem;
+    font-size: 1rem;
+    margin-left: 0.3rem;
 }
 .number__container {
     text-align: center;

@@ -114,15 +114,19 @@ const setPieSize = computed(() => {
     font-size: 1rem;
 }
 .pie__text-value {
-    display: inline-block;
+    display: flex;
+    position: absolute;
     font-size: 3rem;
-    padding: 2rem;
     border-radius: 50%;
-    text-align: center;
-    transform: translateY(-154px);
+    top: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    justify-content: center;
+    align-items: center;
 }
 .pie__text-value > span {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 .pie__container {
     text-align: center;
