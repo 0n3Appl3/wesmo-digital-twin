@@ -1,9 +1,20 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import SplashScreen from './components/SplashScreen.vue';
 import TitleBar from './components/TitleBar.vue';
 import ComplicationsGrid from './components/complications/ComplicationsGrid.vue';
+
+const loading = ref(false)
+
+onMounted(async () => {
+	const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test').catch(() => {
+		loading.value = true;
+	})
+})
 </script>
 
 <template>
+	<SplashScreen :loading="loading"/>
 	<TitleBar />
 	<ComplicationsGrid />
 </template>

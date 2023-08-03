@@ -114,7 +114,6 @@ const checkForNewData = () => {
     <div class="grid__container-outer">
         <div class="control__container">
             <RefreshButton />
-            <!-- <p>test</p> -->
             <p>Last Updated &bullet; {{ lastUpdated }}</p>
         </div>
         <div class="grid__container">
