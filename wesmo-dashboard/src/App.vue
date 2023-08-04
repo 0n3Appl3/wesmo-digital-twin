@@ -4,17 +4,23 @@ import SplashScreen from './components/SplashScreen.vue';
 import TitleBar from './components/TitleBar.vue';
 import ComplicationsGrid from './components/complications/ComplicationsGrid.vue';
 
-const loading = ref(false)
+const loading = ref(true)
+const error = ref(false)
+const splashScreenWaitTime = ref(1)
 
-onMounted(async () => {
-	const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test').catch(() => {
-		loading.value = true;
-	})
+onMounted(() => {
+	setTimeout(async () => {
+		await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test').then(() => {
+			loading.value = false;
+		}).catch(() => {
+			error.value = true;
+		})
+	}, splashScreenWaitTime.value * 1000)
 })
 </script>
 
 <template>
-	<SplashScreen :loading="loading"/>
+	<SplashScreen :loading="loading" :error="error"/>
 	<TitleBar />
 	<ComplicationsGrid />
 </template>
