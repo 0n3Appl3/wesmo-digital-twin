@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RotateRight } from '@iconsans/vue';
 
+const emit = defineEmits(['clicked'])
+const refreshText = ref('Refresh')
+
 const clicked = () => {
-    alert('test')
+    emit('clicked')
 }
 </script>
 
 <template>
     <button @click="clicked">
         <RotateRight class="refresh__icon"/>
-        <span>Refresh</span>
+        <span>{{ refreshText }}</span>
     </button>
 </template>
 

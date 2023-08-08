@@ -84,7 +84,7 @@ let placeholder = ref('placeholder')
 
 onMounted(() => {
     lastUpdated.value = new Date().toLocaleTimeString()
-    checkForNewData()
+    pollDataLoop()
 })
 
 /*
@@ -92,28 +92,32 @@ onMounted(() => {
  * have multiple pending requests because setInterval executes after a set amount of time has elapsed
  * whether the previous calls have been fulfilled or not.
  */
-const checkForNewData = () => {
+const pollDataLoop = () => {
     setTimeout(async () => {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test')
-        switch(response.status) {
-            case 200:
-                placeholder.value = await response.json()
-                lastUpdated.value = new Date().toLocaleTimeString()
-                break;
-            case 204:
-                break;
-            default:
-                break;
-        }
-        checkForNewData()
+        await checkForNewData()
+        pollDataLoop()
     }, pollingDelay.value)
+}
+
+const checkForNewData = async () => {
+    const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test')
+    switch(response.status) {
+        case 200:
+            placeholder.value = await response.json()
+            lastUpdated.value = new Date().toLocaleTimeString()
+            break;
+        case 204:
+            break;
+        default:
+            break;
+    }
 }
 </script>
 
 <template>
     <div class="grid__container-outer">
         <div class="control__container">
-            <RefreshButton />
+            <RefreshButton @clicked="checkForNewData" />
             <p>Last Updated &bullet; {{ lastUpdated }}</p>
         </div>
         <div class="grid__container">
