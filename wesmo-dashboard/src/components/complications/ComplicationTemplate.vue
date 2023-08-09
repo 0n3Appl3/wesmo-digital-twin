@@ -42,7 +42,12 @@ const test = () => {
 </script>
 
 <template>
-    <div :class="[container, setGridState, setTextLight]" :style="{ backgroundColor: bkg }">
+    <div id="test" 
+		 :class="[container, setGridState, setTextLight]" 
+		 :style="{ backgroundColor: bkg }" 
+		 data-tilt 
+		 data-tilt-glare data-tilt-max-glare="0.5"
+		 data-tilt-max="20">
 		<slot />
     </div>
 </template>
