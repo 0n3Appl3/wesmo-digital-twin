@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import IconSpinner from './icons/IconSpinner.vue';
+
 const props = defineProps({
     loading: {
         type: Boolean,
@@ -15,9 +17,7 @@ const props = defineProps({
     <div :class="{ splash__background: true, splash__animate: !props.loading }">
 		<div>
 			<img src="/wesmo-logo.png" alt="WESMO Logo" />
-			<svg class="spinner" viewBox="0 0 50 50">
-				<circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-			</svg>
+			<IconSpinner />
 			<p v-if="!props.error">Loading...</p>
 			<p v-else>There is problem connecting to the server. Refresh the page to try again.</p>
 		</div>
@@ -56,43 +56,6 @@ p {
   to {
     opacity: 0;
     visibility: hidden;
-  }
-}
-/* Spinner Animation Credit: https://codepen.io/supah/pen/BjYLdW */
-.spinner {
-  animation: rotate 2s linear infinite;
-  z-index: 2;
-  display: block;
-  position: absolute;
-  left: 50%;
-  margin: -25px 0 0 -25px;
-  width: 50px;
-  height: 50px;
-  
-  & .path {
-    stroke: #656565;
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
-  }
-  
-}
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
-  }
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
   }
 }
 </style>

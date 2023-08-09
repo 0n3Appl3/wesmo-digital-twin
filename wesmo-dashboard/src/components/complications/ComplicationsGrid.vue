@@ -6,6 +6,7 @@ import PieVisual from '../visualisations/PieVisual.vue';
 import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 import RefreshButton from '../RefreshButton.vue';
+import IconSpinner from '../icons/IconSpinner.vue';
 
 const battery = ref({
     status: {
@@ -67,6 +68,8 @@ const battery = ref({
     },
 })
 
+const refreshing = ref(false)
+const refreshAnimationTime = ref(1)
 const lastUpdated = ref('')
 
 const redBkg = ref('#d54646')
@@ -101,6 +104,7 @@ const pollDataLoop = () => {
 
 const checkForNewData = async () => {
     const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test')
+    refreshing.value = true
     switch(response.status) {
         case 200:
             placeholder.value = await response.json()
@@ -111,6 +115,9 @@ const checkForNewData = async () => {
         default:
             break;
     }
+    setTimeout(() => {
+        refreshing.value = false
+    }, refreshAnimationTime.value * 1000)
 }
 </script>
 
@@ -118,6 +125,9 @@ const checkForNewData = async () => {
     <div class="grid__container-outer">
         <div class="control__container">
             <RefreshButton @clicked="checkForNewData" />
+            <Transition>
+                <IconSpinner v-if="refreshing" />
+            </Transition>
             <p>Last Updated &bullet; {{ lastUpdated }}</p>
         </div>
         <div class="grid__container">
@@ -187,5 +197,11 @@ const checkForNewData = async () => {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 1rem;
+}
+.v-enter-active, .v-leave-active {
+  transition: opacity 0.5s ease;
+}
+.v-enter-from, .v-leave-to {
+  opacity: 0;
 }
 </style>
