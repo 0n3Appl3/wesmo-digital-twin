@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import BarVisual from '../visualisations/BarVisual.vue';
 import NumberVisual from '../visualisations/NumberVisual.vue';
 import PieVisual from '../visualisations/PieVisual.vue';
@@ -7,6 +7,13 @@ import StatusVisual from '../visualisations/StatusVisual.vue';
 import ComplicationTemplate from './ComplicationTemplate.vue';
 import RefreshButton from '../RefreshButton.vue';
 import IconSpinner from '../icons/IconSpinner.vue';
+
+const props = defineProps({
+    data: {
+        type: Number,
+        default: 0,
+    },
+})
 
 const battery = ref({
     status: {
@@ -90,6 +97,10 @@ onMounted(() => {
     pollDataLoop()
 })
 
+watch(props, () => {
+    lastUpdated.value = new Date().toLocaleTimeString()
+})
+
 /*
  * Note: setTimeout is better than setInterval because if the server happens to be slow, I could
  * have multiple pending requests because setInterval executes after a set amount of time has elapsed
@@ -138,7 +149,11 @@ const checkForNewData = async () => {
                             :max-value="battery.soc.max"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="1" :bkg="greyBkgDim">
-                    <NumberVisual :parameter-one="battery.ampHour"
+                    <NumberVisual :parameter-one="{
+                                    text: 'Battery Amp-Hour',
+                                    value: props.data,
+                                    unit: 'Ah',
+                                }"
                                 :parameter-two="battery.dischargeRate"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="1" :bkg="greyBkgDark" :light-text="true">
@@ -148,7 +163,7 @@ const checkForNewData = async () => {
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="1" :bkg="greyBkgDim">
                     <PieVisual :text-value="battery.avgTemp.text"
-                            :current-value="battery.avgTemp.current" 
+                            :current-value="props.data" 
                             :max-value="battery.avgTemp.max" 
                             :text-suffix="battery.avgTemp.suffix" 
                             :bkg="greyBkgDim"/>
@@ -171,7 +186,7 @@ const checkForNewData = async () => {
                 </ComplicationTemplate>
             </div>
         </div>
-        <p>{{ placeholder }}</p>
+        <p>{{ props.data }}</p>
     </div>
 </template>
 

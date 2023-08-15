@@ -3,10 +3,64 @@ const dotenv = require('dotenv').config({
 })
 const { Sequelize, DataTypes, } = require('sequelize')
 const bodyParser = require('body-parser')
+const mqtt = require('mqtt')
+const socketIo = require('socket.io')
+const http = require('http')
 const cors = require('cors')
 const express = require('express')
 const app = express()
+const server = http.createServer(app)
+const io = socketIo(server, {
+    cors: {
+        origin: '*',
+    },
+    transports: ['websocket', 'polling', 'flashsocket']
+})
 const port = 3000
+
+/*
+ * Setting up MQTT
+ */
+const mqttClient = mqtt.connect('http://wesmo.co.nz:1883/');
+
+mqttClient.on('connect', () => {
+    console.log('Connected to MQTT Broker');
+    mqttClient.subscribe('<check with Casper>');
+});
+
+/*
+ * Setting up listening for message
+ */
+mqttClient.on('message', (topic, message) => {
+    console.log(`Received message on ${ topic }: ${ message.toString() }`);
+    // Emit message (socket.io)
+    io.emit('event', message.toString());
+});
+
+/*
+ * Setting up Socket.io
+ */
+io.on('connection', (socket) => {
+    console.log('User connected!');
+    emitTest();
+    socket.on('disconnect', () => {
+        console.log('User disconnected!');
+    });
+});
+
+// Run the server.
+server.listen(port, () => {
+    console.log(`WESMO Backend running on port ${ port }`);
+})
+
+// TESTING PURPOSES (pretend this is data to be displayed on the dashboard)
+const emitTest = () => {
+    setTimeout(async () => {
+        const num = Math.floor(Math.random() * 100);
+        await io.emit('event', num);
+        emitTest();
+    }, 5 * 1000);
+}
 
 // REST API endpoint naming properties.
 const appContext = 'api'
@@ -74,8 +128,8 @@ app.use(cors())
 /*
  * Listen Express.js instance on a specified port.
  */
-app.listen(port, () => {
-    console.log(`WESMO Dashboard Backend listening on port ${ port }`)
+app.listen((port + 1), () => {
+    console.log(`WESMO Dashboard Backend listening on port ${ (port + 1) }`)
     authDatabaseConnection()
 })
 
@@ -98,6 +152,28 @@ app.get(prefix + '/test', (req, res) => {
     responseData = null
 })
 
+app.get(prefix + '/battery-data', async (req, res) => {
+    const result = await Category.findAll()
+
+    if (!result) {
+        return res.status(404).json({
+            status: 'Fail',
+            message: 'No results found'
+        })
+    }
+    res.status(200).json(result)
+})
+
+app.get(prefix + '/battery-data/latest', async (req, res) => {
+    const result = await Category.findOne({
+        order: [
+            ['id', 'DESC'],
+        ],
+    })
+    res.status(200).json(result)
+})
+
+// DEVELOPMENT ENDPOINTS (NOT FINAL)
 app.get(prefix + '/rest-test', async (req, res) => {
     const result = await Category.findAll()
 
