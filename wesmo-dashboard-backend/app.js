@@ -59,7 +59,7 @@ const emitTest = () => {
         const num = Math.floor(Math.random() * 100);
         await io.emit('event', num);
         emitTest();
-    }, 5 * 1000);
+    }, 1 * 1000);
 }
 
 // REST API endpoint naming properties.

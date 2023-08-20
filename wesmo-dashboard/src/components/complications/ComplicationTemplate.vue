@@ -74,4 +74,14 @@ const test = () => {
 .text--light {
 	color: #ededed;
 }
+@media screen and (max-width: 600px) {
+	.complication__container {
+		padding: 1rem;
+	}
+	.medium-grid-size {
+		grid-column: auto;
+		grid-template-columns: auto;
+		grid-row: auto / span 2;
+	}
+}
 </style>

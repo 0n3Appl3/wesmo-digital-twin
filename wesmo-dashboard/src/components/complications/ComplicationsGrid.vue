@@ -137,7 +137,7 @@ const checkForNewData = async () => {
         <div class="control__container">
             <RefreshButton @clicked="checkForNewData" />
             <Transition>
-                <IconSpinner v-if="refreshing" />
+                <IconSpinner v-if="refreshing" class="control__spinner"/>
             </Transition>
             <p>Last Updated &bullet; {{ lastUpdated }}</p>
         </div>
@@ -214,9 +214,23 @@ const checkForNewData = async () => {
     padding-bottom: 1rem;
 }
 .v-enter-active, .v-leave-active {
-  transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
 }
 .v-enter-from, .v-leave-to {
-  opacity: 0;
+    opacity: 0;
+}
+@media screen and (max-width: 1100px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .control__spinner {
+        position: fixed;
+        top: 8rem;
+    }
 }
 </style>
