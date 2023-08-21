@@ -27,18 +27,6 @@ const setTextLight = computed(() => {
 	if (!props.lightText) return;
 	return 'text--light';
 })
-
-const test = () => {
-	// Testing REST API
-	fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/rest-test-2')
-	.then(response => {
-		return response.json()
-	})
-	.then(data => {
-		// Testing response
-		console.log(data)
-	})
-}
 </script>
 
 <template>

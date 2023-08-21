@@ -29,7 +29,6 @@ p {
 	padding-top: 3rem;
 }
 .splash__background {
-    /* background: var(--color-background); */
     background: linear-gradient(180deg, var(--colour-background-lighter) 0%, var(--colour-background-light) 100%);
     bottom: 0;
     display: flex;
@@ -49,13 +48,13 @@ p {
 	padding-bottom: 2rem;
 }
 .splash__animate {
-  animation: animateout 1s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
+	animation: animateout 1s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 @keyframes animateout {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
 }
 </style>
