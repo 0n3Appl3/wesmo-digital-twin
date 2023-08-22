@@ -8,20 +8,24 @@ import ComplicationsGrid from './components/complications/ComplicationsGrid.vue'
 const loading = ref(true)
 const error = ref(false)
 const splashScreenWaitTime = ref(1)
-const testValue = ref()
+const battery = ref()
+const errorMessage = ref('')
 
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
+socket.on('error', (error) => {
+	errorMessage.value = error + '\n';
+})
 socket.on('event', (arg: any) => {
-	console.log(arg)
-	testValue.value = arg
+	battery.value = arg
 })
 
 onMounted(() => {
 	setTimeout(async () => {
-		await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test').then(() => {
+		await fetch(import.meta.env.VITE_SEQUELIZE_URL + '/api/v1/test').then(() => {
 			loading.value = false;
-		}).catch(() => {
+		}).catch((error) => {
+			errorMessage.value = error;
 			error.value = true;
 		})
 	}, splashScreenWaitTime.value * 1000)
@@ -29,9 +33,9 @@ onMounted(() => {
 </script>
 
 <template>
-	<SplashScreen :loading="loading" :error="error"/>
+	<SplashScreen :loading="loading" :error="error" :error-message="errorMessage"/>
 	<TitleBar />
-	<ComplicationsGrid :data="testValue"/>
+	<ComplicationsGrid :data="battery"/>
 </template>
 
 <style scoped>

@@ -10,6 +10,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    errorMessage: {
+        type: String,
+        default: '',
+    }
 })
 </script>
 
@@ -19,7 +23,7 @@ const props = defineProps({
 			<img src="/wesmo-logo.png" alt="WESMO Logo" />
 			<IconSpinner />
 			<p v-if="!props.error">Loading...</p>
-			<p v-else>There is problem connecting to the server. Refresh the page to try again.</p>
+			<p v-else>There is problem connecting to the server. Refresh the page to try again.<br>{{ errorMessage }}</p>
 		</div>
     </div>
 </template>
