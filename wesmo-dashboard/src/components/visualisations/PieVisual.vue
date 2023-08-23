@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { reverse } from 'dns';
 import { ref, computed } from 'vue'
 
 const props = defineProps({
@@ -27,6 +28,10 @@ const props = defineProps({
     bkg: {
         type: String,
         default: '#000',
+    },
+    reverseSafeThreshold: {
+        type: Boolean,
+        default: false,
     }
 })
 
@@ -43,13 +48,13 @@ const setPieColour = computed(() => {
     let pieColour: string = '';
     switch(true) {
         case (progress <= props.safeThreshold):
-            pieColour = '#15efa1';
+            pieColour = !props.reverseSafeThreshold ? '#15efa1' : '#ff7272';
             break;
         case (progress > props.safeThreshold && progress <= props.warningThreshold):
             pieColour = '#ffcc68';
             break;
         default:
-            pieColour = '#ff7272';
+            pieColour = !props.reverseSafeThreshold ? '#ff7272' : '#15efa1';
             break;
     }
     return pieColour;

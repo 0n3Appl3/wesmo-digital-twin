@@ -35,7 +35,8 @@ const battery = ref({
         text: 'State of Health (SOH)',
         current: 95,
         max: 100,
-        suffix: '%',  
+        suffix: '%', 
+        reverseSafeThreshold: true, 
     },
     ampHour: {
         text: 'Battery Amp-Hour',
@@ -173,7 +174,8 @@ const checkForNewData = async () => {
                             :current-value="battery.soh.current" 
                             :max-value="battery.soh.max" 
                             :text-suffix="battery.soh.suffix"
-                            :bkg="greyBkgLight"/>
+                            :bkg="greyBkgLight"
+                            :reverse-safe-threshold="battery.soh.reverseSafeThreshold"/>
                     <BarVisual :text-value="battery.predictedSoc.text" 
                             :current-value="battery.predictedSoc.current" 
                             :max-value="battery.predictedSoc.max"/>
