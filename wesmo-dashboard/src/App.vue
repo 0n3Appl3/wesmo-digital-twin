@@ -10,6 +10,7 @@ const error = ref(false)
 const splashScreenWaitTime = ref(1)
 const battery = ref()
 const errorMessage = ref('')
+const test = ref()
 
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
@@ -17,7 +18,8 @@ socket.on('error', (error) => {
 	errorMessage.value = error + '\n';
 })
 socket.on('event', (arg: any) => {
-	battery.value = arg
+	// battery.value = arg
+	test.value = arg
 })
 
 onMounted(() => {
@@ -33,6 +35,7 @@ onMounted(() => {
 </script>
 
 <template>
+	<h1>{{ test }}</h1>
 	<SplashScreen :loading="loading" :error="error" :error-message="errorMessage"/>
 	<TitleBar />
 	<ComplicationsGrid :data="battery"/>

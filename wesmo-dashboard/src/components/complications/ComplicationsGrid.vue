@@ -22,7 +22,7 @@ const battery = ref({
         state: 1,  
     },
     soc: {
-        text: 'State of Charge (SOC)',
+        text: 'Actual State of Charge (SOC)',
         current: 0.47,
         max: 1,
     },
@@ -176,9 +176,16 @@ const checkForNewData = async () => {
                             :text-suffix="battery.soh.suffix"
                             :bkg="greyBkgLight"
                             :reverse-safe-threshold="battery.soh.reverseSafeThreshold"/>
-                    <BarVisual :text-value="battery.predictedSoc.text" 
-                            :current-value="battery.predictedSoc.current" 
-                            :max-value="battery.predictedSoc.max"/>
+                    <NumberVisual :parameter-one="{
+                                    text: 'Estimated Remaining Distance',
+                                    value: 0,
+                                    unit: 'km',
+                                }"
+                                :parameter-two="{
+                                    text: 'Estimated SOC',
+                                    value: 0,
+                                    unit: '%',
+                                }"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="2" :bkg="greyBkgLight">
                     <NumberVisual :parameter-one="battery.packVoltage"
