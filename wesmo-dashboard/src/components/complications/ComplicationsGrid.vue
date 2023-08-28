@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, reactive, watch, onBeforeUpdate } from 'vue'
 import BarVisual from '../visualisations/BarVisual.vue';
 import NumberVisual from '../visualisations/NumberVisual.vue';
 import PieVisual from '../visualisations/PieVisual.vue';
@@ -10,12 +10,11 @@ import IconSpinner from '../icons/IconSpinner.vue';
 
 const props = defineProps({
     data: {
-        type: Number,
-        default: 0,
+        type: Object,
     },
 })
 
-const battery = ref({
+const battery = reactive({
     status: {
         text: 'Battery Condition',
         status: 'Normal',
@@ -40,7 +39,7 @@ const battery = ref({
     },
     ampHour: {
         text: 'Battery Amp-Hour',
-        value: 1000,
+        value: 10,
         unit: 'Ah',
     },
     dischargeRate: {
@@ -74,6 +73,16 @@ const battery = ref({
         value: 12.3,
         unit: '˚C',
     },
+    estRemDistance: {
+        text: 'Estimated Remaining Distance',
+        value: 0,
+        unit: 'km',
+    },
+    estSOC: {
+        text: 'Estimated SOC',
+        value: 0,
+        unit: '%',
+    }
 })
 
 const refreshing = ref(false)
@@ -93,11 +102,31 @@ const greyBkgLight = ref('#e8e8e8')
 const pollingDelay = ref(60000)
 let placeholder = ref('placeholder')
 
+/*
+ * 
+ */
 onMounted(() => {
     lastUpdated.value = new Date().toLocaleTimeString()
     pollDataLoop()
 })
 
+/*
+ * Updates the dashboard information as battery data is received.
+ */
+onBeforeUpdate(() => {
+    battery.soc.current = props.data?.packSOC ?? battery.soc.current;
+    battery.ampHour.value = props.data?.packAmpHour ?? battery.ampHour.value;
+    battery.avgTemp.current = props.data?.avgTemp ?? battery.avgTemp.current;
+    battery.soh.current = props.data?.packHealth ?? battery.soh.current;
+    battery.packVoltage.value = props.data?.packVoltage ?? battery.packVoltage.value;
+    battery.packCurrent.value = props.data?.packCurrent ?? battery.packCurrent.value;
+    battery.lowestTemp.value = props.data?.lowTemp ?? battery.lowestTemp.value;
+    battery.highestTemp.value = props.data?.highTemp ?? battery.highestTemp.value;
+})
+
+/*
+ * Updates last updated text when battery data is received.
+ */
 watch(props, () => {
     lastUpdated.value = new Date().toLocaleTimeString()
 })
@@ -150,21 +179,17 @@ const checkForNewData = async () => {
                             :max-value="battery.soc.max"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="1" :bkg="greyBkgDim">
-                    <NumberVisual :parameter-one="{
-                                    text: 'Battery Amp-Hour',
-                                    value: props.data,
-                                    unit: 'Ah',
-                                }"
-                                :parameter-two="battery.dischargeRate"/>
+                    <NumberVisual :parameter-one="battery.ampHour"
+                            :parameter-two="battery.dischargeRate"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="1" :bkg="greyBkgDark" :light-text="true">
                     <StatusVisual :text-value="battery.status.text" 
-                                :status-value="battery.status.status" 
-                                :state-value="battery.status.state"/>
+                            :status-value="battery.status.status" 
+                            :state-value="battery.status.state"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="1" :bkg="greyBkgDim">
                     <PieVisual :text-value="battery.avgTemp.text"
-                            :current-value="props.data" 
+                            :current-value="battery.avgTemp.current" 
                             :max-value="battery.avgTemp.max" 
                             :text-suffix="battery.avgTemp.suffix" 
                             :bkg="greyBkgDim"/>
@@ -176,26 +201,17 @@ const checkForNewData = async () => {
                             :text-suffix="battery.soh.suffix"
                             :bkg="greyBkgLight"
                             :reverse-safe-threshold="battery.soh.reverseSafeThreshold"/>
-                    <NumberVisual :parameter-one="{
-                                    text: 'Estimated Remaining Distance',
-                                    value: 0,
-                                    unit: 'km',
-                                }"
-                                :parameter-two="{
-                                    text: 'Estimated SOC',
-                                    value: 0,
-                                    unit: '%',
-                                }"/>
+                    <NumberVisual :parameter-one="battery.estRemDistance"
+                            :parameter-two="battery.estSOC"/>
                 </ComplicationTemplate>
                 <ComplicationTemplate :size="2" :bkg="greyBkgLight">
                     <NumberVisual :parameter-one="battery.packVoltage"
-                                :parameter-two="battery.packCurrent"/>
+                            :parameter-two="battery.packCurrent"/>
                     <NumberVisual :parameter-one="battery.lowestTemp"
-                                :parameter-two="battery.highestTemp"/>
+                            :parameter-two="battery.highestTemp"/>
                 </ComplicationTemplate>
             </div>
         </div>
-        <p>{{ props.data }}</p>
     </div>
 </template>
 
