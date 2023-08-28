@@ -13,6 +13,8 @@ import requests
 import asyncio
 import socketio
 
+error_prefix = "[ERROR] "
+
 # Create a new Async Socket IO server
 sio = socketio.AsyncClient()
 
@@ -21,15 +23,18 @@ sio = socketio.AsyncClient()
 #
 @sio.event
 async def event(data):
-    print('Message received: ', data)
+    print("Message received: ", data)
 
 #
 # Connects to the battery dashboard backend server.
 #
 async def connect_to_backend():
     test_sql()
-    await sio.connect(os.environ.get('VITE_BACKEND_URL'))
-    await sio.wait()
+    try:
+        await sio.connect(os.environ.get('VITE_BACKEND_URL'))
+        await sio.wait()
+    except Exception as error:
+        print_error("A connection error has occurred!", error)
 
 #
 # TEMPORARY: Testing GET requests to the backend server.
@@ -39,9 +44,19 @@ def test_sql():
     headers = {
         "content-type": "application/json",
     }
-    get_response = requests.get(url_get, headers=headers)
-    get_response_json = get_response.json()
-    print(get_response_json)
+    try:
+        get_response = requests.get(url_get, headers=headers)
+        get_response_json = get_response.json()
+        print(get_response_json)
+    except requests.ConnectionError as error:
+        print_error("A connection error has occurred!", error)
+
+def print_error(message, error):
+    global error_prefix
+    print("-------\n" + error_prefix + message +
+          "\n\n" +
+          str(error) +
+          "\n-------")
 
 def save_result(result):
     # Example data JSON (not actual one)
