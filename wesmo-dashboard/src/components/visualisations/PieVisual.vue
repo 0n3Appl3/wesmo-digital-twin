@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reverse } from 'dns';
 import { ref, computed } from 'vue'
 
 const props = defineProps({

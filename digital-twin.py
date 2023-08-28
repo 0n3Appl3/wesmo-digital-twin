@@ -1,21 +1,47 @@
 from dotenv.main import load_dotenv
 from sklearn.linear_model import LinearRegression
+from sklearn.neural_network import MLPRegressor
+from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_absolute_percentage_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import os
-import mysql.connector
 import requests
+import asyncio
+import socketio
 
-# Testing mysql library (not relevant to requests library)
-db = mysql.connector.connect(
-    host=os.environ.get('VITE_DB_HOST'),
-    user=os.environ.get('VITE_DB_USER'),
-    password=os.environ.get('VITE_DB_PASSWORD'),
-)
+# Create a new Async Socket IO server
+sio = socketio.AsyncClient()
+
+#
+# Event fires when 'event' packet is received from the server.
+#
+@sio.event
+async def event(data):
+    print('Message received: ', data)
+
+#
+# Connects to the battery dashboard backend server.
+#
+async def connect_to_backend():
+    test_sql()
+    await sio.connect(os.environ.get('VITE_BACKEND_URL'))
+    await sio.wait()
+
+#
+# TEMPORARY: Testing GET requests to the backend server.
+#
+def test_sql():
+    url_get = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test"
+    headers = {
+        "content-type": "application/json",
+    }
+    get_response = requests.get(url_get, headers=headers)
+    get_response_json = get_response.json()
+    print(get_response_json)
 
 def save_result(result):
     # Example data JSON (not actual one)
@@ -40,6 +66,40 @@ def main():
     get_response_json = get_response.json()
     predict_model(get_response_json)
 
+#
+# NOT YET TESTED
+#
+def predict_neural(json):
+    # Read data
+    df = pd.DataFrame(json)
+
+    # Target
+    target_column = ['<insert target column>']
+
+    X = df['<insert parameter column>'].values
+    y = df[target_column].values.ravel()
+
+    X = X.reshape((-1, 1))
+    y = y.reshape((-1, 1))
+
+    # Split data into train and test.
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
+
+    hyperparameters = {
+        'mlpregressor__hidden_layer_sizes': [(5,), (10,), (100,)],
+        'mlpregressor__activation': ['logistic', 'relu', 'tanh']
+    }
+    
+    model = GridSearchCV(make_pipeline(StandardScaler(), MLPRegressor(random_state=123)), hyperparameters, cv=10, n_jobs=-1)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    single_pred = model.predict(X_test[0].reshape(-1, 1))
+    save_result(single_pred)
+
+#
+# NOT YET TESTED
+#
 def predict_model(json):
     # Read data
     df = pd.DataFrame(json)
@@ -91,7 +151,9 @@ def predict_model(json):
     print("Accuracy on test set: {:.2f}".format(model.score(X_test_scaled, y_test_scaled)))
     print("Mean absolute percentage error: %.2f" % mean_absolute_percentage_error(y_test_scaled, y_pred))
 
-# WORK IN PROGRESS. NOT YET TESTED.
+#
+# NOT YET TESTED
+#
 def predict_polynomial(json):
     df = pd.DataFrame(json)
 
@@ -124,4 +186,5 @@ def predict_polynomial(json):
 
 if __name__ == "__main__":
     load_dotenv()
-    main()
+    # main()
+    asyncio.run(connect_to_backend())
