@@ -43,10 +43,18 @@ mqttClient.on('message', (topic, message) => {
                 packCurrent: parseInt(values[1] + values[2], 16),
                 packVoltage: parseInt(values[3] + values[4], 16),
                 packSOC: parseInt(values[8], 16),
+                packAmpHour: null,
+                packHealth: null,
+                highTemp: null,
+                lowTemp: null,
+                avgTemp: null,
             }
             break;
         case '6B3':
             data = {
+                packCurrent: null,
+                packVoltage: null,
+                packSOC: null,
                 packAmpHour: parseInt(values[1] + values[2], 16),
                 packHealth: parseInt(values[3], 16),
                 highTemp: parseInt(values[4], 16),
@@ -57,27 +65,11 @@ mqttClient.on('message', (topic, message) => {
         default:
             break;
     }
-
     if (!data) {
         return;
     }
     // Emit message (socket.io)
     io.emit('event', data);
-
-    // NOTE TO SELF:
-    /*
-     * For example: 06000009 23 0C 20 01 00 00 00 00
-     * Using translation.csv file '06000009,6,"Not Applicable",2,"ThrottleRequest0_10000"'
-     * First six bytes mean there's no value. Next two bytes are the Throttle Request
-     * 
-     * Another example: 6B2 00 00 02 10 00 00 00 5F
-     * Using translation.csv file '6B2,2,"PackCurrent0_1A",2,"PackInstantaneousVoltage0_1V",3,"Not Applicable",1,"PackStateOfCharge"'
-     * First two bytes mean Pack Current (divide value by 10).
-     * 
-     * Final example: 6B5 9E EF 00 00 00 00 00 00
-     * Using translation.csv file '6B5,2,"AverageCellVoltage0_0001V"'
-     * First two bytes are Average Cell Voltage (divide value by 1000)
-     */
 });
 
 /*
