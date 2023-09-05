@@ -18,8 +18,8 @@ socket.on('error', (error) => {
 	errorMessage.value = error + '\n';
 })
 socket.on('event', (arg: any) => {
-	// battery.value = arg
-	test.value = arg
+	battery.value = arg
+	// test.value = arg
 })
 
 onMounted(() => {

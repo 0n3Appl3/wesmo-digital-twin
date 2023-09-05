@@ -21,7 +21,8 @@ const port = 3000
 /*
  * Setting up MQTT
  */
-const mqttClient = mqtt.connect('http://wesmo.co.nz:1883/');
+// const mqttClient = mqtt.connect('http://wesmo.co.nz:1883/');
+const mqttClient = mqtt.connect('http://13.55.132.107:1883/');
 
 mqttClient.on('connect', () => {
     console.log('Connected to MQTT Broker');
@@ -34,15 +35,15 @@ mqttClient.on('connect', () => {
 mqttClient.on('message', (topic, message) => {
     console.log(`Received message on ${ topic }: ${ message.toString() }`);
 
-    const values = message.split(' ');
+    const values = message.toString().split(' ');
     let data = null;
 
     switch (values[0]) {
         case '6B2':
             data = {
-                packCurrent: parseInt(values[1] + values[2], 16),
-                packVoltage: parseInt(values[3] + values[4], 16),
-                packSOC: parseInt(values[8], 16),
+                packCurrent: parseInt(values[1] + values[2], 16) / 10,
+                packVoltage: parseInt(values[3] + values[4], 16) / 10,
+                packSOC: parseInt(values[8], 16) / 100,
                 packAmpHour: null,
                 packHealth: null,
                 highTemp: null,
@@ -55,7 +56,7 @@ mqttClient.on('message', (topic, message) => {
                 packCurrent: null,
                 packVoltage: null,
                 packSOC: null,
-                packAmpHour: parseInt(values[1] + values[2], 16),
+                packAmpHour: parseInt(values[1] + values[2], 16) / 10,
                 packHealth: parseInt(values[3], 16),
                 highTemp: parseInt(values[4], 16),
                 lowTemp: parseInt(values[6], 16),
@@ -77,7 +78,7 @@ mqttClient.on('message', (topic, message) => {
  */
 io.on('connection', (socket) => {
     console.log('User connected!');
-    emitTest();
+    // emitTest();
     socket.on('disconnect', () => {
         console.log('User disconnected!');
     });
