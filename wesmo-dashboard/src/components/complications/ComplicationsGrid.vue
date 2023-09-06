@@ -14,6 +14,9 @@ const props = defineProps({
     },
 })
 
+/*
+ * Battery data to display on the dashboard.
+ */
 const battery = reactive({
     status: {
         text: 'Battery Condition',
@@ -22,55 +25,50 @@ const battery = reactive({
     },
     soc: {
         text: 'Actual State of Charge (SOC)',
-        current: 0.47,
-        max: 1,
-    },
-    predictedSoc : {
-        text: 'Predicted SOC in the next minute',
-        current: 0.44,
+        current: 0,
         max: 1,
     },
     soh: {
         text: 'State of Health (SOH)',
-        current: 95,
+        current: 0,
         max: 100,
         suffix: '%', 
         reverseSafeThreshold: true, 
     },
     ampHour: {
         text: 'Battery Amp-Hour',
-        value: 10,
+        value: 0,
         unit: 'Ah',
     },
     dischargeRate: {
-        text: 'Discharge Rate',
-        value: 12.3,
-        unit: 'A',
+        text: 'Discharge Time',
+        value: 0,
+        unit: 'h',
     },
     avgTemp: {
         text: 'Average Temperature',
-        current: 37.5,
+        current: 0,
         max: 100,
         suffix: '˚C',  
     },
     packVoltage: {
         text: 'Pack Voltage',
-        value: 12.3,
+        value: 0,
         unit: 'V',
     },
     packCurrent: {
         text: 'Pack Current',
-        value: 12.3,
+        value: 0,
         unit: 'A',
     },
     lowestTemp: {
         text: 'Lowest Temperature',
-        value: 12.3,
+        value: 0,
         unit: '˚C',
     },
     highestTemp: {
         text: 'Highest Temperature',
-        value: 12.3,
+        value: 0,
         unit: '˚C',
     },
     estRemDistance: {
@@ -95,19 +93,10 @@ const greyBkgDim = ref('#d3d3d3')
 const greyBkgLight = ref('#e8e8e8')
 
 /*
- * Note: Polling interval is 60,000 milliseconds (1 minute). Not an ideal scenario for an application that
- * needs to be as close to real-time as possible. Might consider looking into other options later.
- * Alternative solution: WebSockets
- */
-const pollingDelay = ref(60000)
-let placeholder = ref('placeholder')
-
-/*
- * 
+ * Set last updated value on dashboard.
  */
 onMounted(() => {
     lastUpdated.value = new Date().toLocaleTimeString()
-    pollDataLoop()
 })
 
 /*
@@ -122,6 +111,8 @@ onBeforeUpdate(() => {
     battery.packCurrent.value = props.data?.packCurrent ?? battery.packCurrent.value;
     battery.lowestTemp.value = props.data?.lowTemp ?? battery.lowestTemp.value;
     battery.highestTemp.value = props.data?.highTemp ?? battery.highestTemp.value;
+    battery.dischargeRate.value = Math.round((battery.ampHour.value / battery.packCurrent.value) * 10) / 10;
+    battery.dischargeRate.value = Number.isNaN(battery.dischargeRate.value) ? 0 : battery.dischargeRate.value == Infinity ? 0 : battery.dischargeRate.value;
 })
 
 /*
@@ -132,23 +123,13 @@ watch(props, () => {
 })
 
 /*
- * Note: setTimeout is better than setInterval because if the server happens to be slow, I could
- * have multiple pending requests because setInterval executes after a set amount of time has elapsed
- * whether the previous calls have been fulfilled or not.
+ * Checks for new battery data.
  */
-const pollDataLoop = () => {
-    setTimeout(async () => {
-        await checkForNewData()
-        pollDataLoop()
-    }, pollingDelay.value)
-}
-
 const checkForNewData = async () => {
     const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/v1/test')
     refreshing.value = true
     switch(response.status) {
         case 200:
-            placeholder.value = await response.json()
             lastUpdated.value = new Date().toLocaleTimeString()
             break;
         case 204:

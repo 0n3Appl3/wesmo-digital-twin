@@ -69,18 +69,23 @@ mqttClient.on('message', (topic, message) => {
     if (!data) {
         return;
     }
-    // Emit message (socket.io)
-    io.emit('event', data);
+    io.emit('receive-battery-data', data);
 });
 
 /*
  * Setting up Socket.io
  */
 io.on('connection', (socket) => {
-    console.log('User connected!');
-    // emitTest();
+    console.log(`User ${ socket.id } connected!`);
+
+    socket.on('join-room', () => {
+        socket.join('room');
+    });
+    socket.on('send-twin-results', (data) => {
+        io.emit('receive-twin-results', data);
+    })
     socket.on('disconnect', () => {
-        console.log('User disconnected!');
+        console.log(`User ${ socket.id } disconnected!`);
     });
 });
 
@@ -93,7 +98,7 @@ server.listen(port, () => {
 const emitTest = () => {
     setTimeout(async () => {
         const num = Math.floor(Math.random() * 100);
-        await io.emit('event', num);
+        await io.emit('receive-battery-data', num);
         emitTest();
     }, 1 * 1000);
 }

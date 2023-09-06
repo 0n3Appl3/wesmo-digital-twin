@@ -17,9 +17,14 @@ const socket = io(import.meta.env.VITE_BACKEND_URL);
 socket.on('error', (error) => {
 	errorMessage.value = error + '\n';
 })
-socket.on('event', (arg: any) => {
+socket.on('connect', () => {
+	socket.emit('join-room')
+})
+socket.on('receive-battery-data', (arg: any) => {
 	battery.value = arg
-	// test.value = arg
+})
+socket.on('receive-twin-results', (arg: any) => {
+	test.value = arg
 })
 
 onMounted(() => {
