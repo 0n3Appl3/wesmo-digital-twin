@@ -8,27 +8,29 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import os
-import threading
 import requests
 import asyncio
 import socketio
 
+# Create a new Async Socket IO server
+sio = socketio.AsyncClient()
+
+# Error message prefix
 error_prefix = "[ERROR] "
+
 grid_search = None
 
+# Model features
 voltage = None
 current = None
 temperature = None
-
-# Create a new Async Socket IO server
-sio = socketio.AsyncClient()
 
 #
 # Event fires when 'event' packet is received from the server.
 #
 @sio.event
 async def event(message: str):
-    global sio, voltage, current, temperature, soc
+    global sio, voltage, current, temperature
     print("Message received: ", message)
     message_array = message.split(" ")
 
@@ -72,14 +74,6 @@ def test_sql():
     except requests.ConnectionError as error:
         print_error("A connection error has occurred!", error)
 
-def print_error(message, error):
-    global error_prefix
-    print("-------\n" +
-          error_prefix + message +
-          "\n\n" +
-          str(error) +
-          "\n-------")
-
 # def save_result(result):
 #     # Example data JSON (not actual one)
 #     new_data = {
@@ -96,17 +90,10 @@ def print_error(message, error):
 #     post_response_json = post_response.json()
 #     print(post_response_json)
 
-def main():
-    # Get data
-    url_get = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test"
-    get_response = requests.get(url_get)
-    get_response_json = get_response.json()
-    #predict_model(get_response_json)
-
 #
-# NOT YET TESTED
+# Trains the MLP Regressor neural network.
 #
-def predict_neural():
+def train_model():
     global grid_search
     # Read JSON data and convert into data frame.
     json = '<insert data>'
@@ -140,14 +127,18 @@ def predict_neural():
     # Make a Grid Search
     grid_search = GridSearchCV(pipe, parameters, cv=10)
 
+    # Fit the model.
     grid_search.fit(X_train, y_train)
     y_pred = grid_search.best_estimator_.predict(X_test)
 
-    # single_pred = model.predict(X_test[0].reshape(-1, 1))
+    # Metrics
     print("Mean Squared Error: %.2f" % mean_squared_error(y_test, y_pred))
     print("Mean Absolute Error: %.2f" % mean_absolute_error(y_test, y_pred))
     print("R2 Score: %.2f" % r2_score(y_test, y_pred))
 
+#
+# Predict battery state of charge and send to dashboard.
+#
 def predict_soc(input):
     global grid_search, sio
     prediction = grid_search.best_estimator_.predict(input)
@@ -156,14 +147,31 @@ def predict_soc(input):
     }
     sio.emit("send-twin-results", json)
 
+#
+# Prints a formatted console error.
+#
+def print_error(message, error):
+    global error_prefix
+    print("-------\n" +
+          error_prefix + message +
+          "\n\n" +
+          str(error) +
+          "\n-------")
+
+#
+# Get data from the Postgres database and train mdoel.
+#
+def main():
+    # Get data and convert into JSON.
+    url_get = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test"
+    get_response = requests.get(url_get)
+    get_response_json = get_response.json()
+    #train_model(get_response_json)
+
+#
+# Load dotenv, train model and listen for new data.
+#
 if __name__ == "__main__":
     load_dotenv()
     # main()
-    #t1 = threading.Thread(predict_neural())
-    t2 = threading.Thread(asyncio.run(connect_to_backend()))
-
-    #t1.start()
-    t2.start()
-
-    #t1.join()
-    t2.join()
+    asyncio.run(connect_to_backend())
