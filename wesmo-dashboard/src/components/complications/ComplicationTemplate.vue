@@ -30,8 +30,7 @@ const setTextLight = computed(() => {
 </script>
 
 <template>
-    <div id="test" 
-		 :class="[container, setGridState, setTextLight]" 
+    <div :class="[container, setGridState, setTextLight]" 
 		 :style="{ backgroundColor: bkg }" 
 		 data-tilt 
 		 data-tilt-glare data-tilt-max-glare="0.5"
