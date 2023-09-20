@@ -53,9 +53,6 @@ async def event(message: str):
         voltage = None
         current = None
         temperature = None
-    # Pretend results are processed for digital twin and send to server and then to all connected web browser clients
-    # sio.emit("send-twin-results", random.randrange(1, 100, 2))
-    # main()
 
 #
 # Connects to the battery dashboard backend server.
@@ -84,22 +81,6 @@ def test_sql():
     except requests.ConnectionError as error:
         print_error("A connection error has occurred!", error)
 
-# def save_result(result):
-#     # Example data JSON (not actual one)
-#     new_data = {
-#         "id": "null",
-#         "<column-2>": result,
-#     }
-#     # Example REST API endpoint (not actual one)
-#     url_post = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test-3"
-#     headers = {
-#         "content-type": "application/json",
-#     }
-#     # Send POST request.
-#     post_response = requests.post(url_post, json=new_data, headers=headers)
-#     post_response_json = post_response.json()
-#     print(post_response_json)
-
 #
 # Trains the LSTM neural network. (NOT YET TESTED)
 #
@@ -110,10 +91,10 @@ def train_model():
     df = pd.DataFrame(json)
 
     # Specify the target column.
-    target_column = ['<insert target column>']
+    target_column = ['packstateofcharge']
 
     # Get the input and target values from columns.
-    X = df['<insert parameter column>'].values
+    X = df[["packinstantaneousvoltage0_1v", "packcurrent0_1a"]].values
     y = df[target_column].values.ravel()
 
     # Normalise the imput data
@@ -148,10 +129,10 @@ def train_model_MLP():
     df = pd.DataFrame(json)
 
     # Specify the target column.
-    target_column = ['<insert target column>']
+    target_column = ['packstateofcharge']
 
     # Get the input and target values from columns.
-    X = df['<insert parameter column>'].values
+    X = df[["packinstantaneousvoltage0_1v", "packcurrent0_1a"]].values
     y = df[target_column].values.ravel()
 
     # Normalise the input data
@@ -228,7 +209,7 @@ def main():
     url_get = os.environ.get('VITE_BACKEND_URL') + "/api/v1/rest-test"
     get_response = requests.get(url_get)
     get_response_json = get_response.json()
-    #train_model(get_response_json)
+    train_model(get_response_json)
 
 #
 # Load dotenv, train model and listen for new data.
