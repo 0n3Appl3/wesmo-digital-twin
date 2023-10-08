@@ -16,13 +16,13 @@ const io = socketIo(server, {
     },
     transports: ['websocket', 'polling', 'flashsocket']
 })
-const port = 3000
+const port = 3001
 
 /*
  * Setting up MQTT
  */
 // const mqttClient = mqtt.connect('http://wesmo.co.nz:1883/');
-const mqttClient = mqtt.connect('http://13.55.132.107:1883/');
+const mqttClient = mqtt.connect('http://52.64.104.47:1883/');
 
 mqttClient.on('connect', () => {
     console.log('Connected to MQTT Broker');
@@ -119,7 +119,7 @@ const sequelize = new Sequelize(
     process.env.VITE_DB_PASSWORD,
     {
         host: process.env.VITE_DB_HOST,
-        dialect: 'mysql',
+        dialect: 'postgres',
         define: {
             freezeTableName: true,
             timestamps: false,

@@ -12,6 +12,9 @@ const props = defineProps({
     data: {
         type: Object,
     },
+    twin: {
+	    type: Object,
+    },
 })
 
 /*
@@ -19,7 +22,7 @@ const props = defineProps({
  */
 const battery = reactive({
     status: {
-        text: 'Battery Condition',
+        text: 'Battery Condition*',
         status: 'Normal',
         state: 1,  
     },
@@ -72,12 +75,12 @@ const battery = reactive({
         unit: '˚C',
     },
     estRemDistance: {
-        text: 'Estimated Remaining Distance',
+        text: 'Estimated Remaining Distance*',
         value: 0,
         unit: 'km',
     },
     estSOC: {
-        text: 'Estimated SOC',
+        text: 'Estimated SOC*',
         value: 0,
         unit: '%',
     }
@@ -113,6 +116,7 @@ onBeforeUpdate(() => {
     battery.highestTemp.value = props.data?.highTemp ?? battery.highestTemp.value;
     battery.dischargeRate.value = Math.round((battery.ampHour.value / battery.packCurrent.value) * 10) / 10;
     battery.dischargeRate.value = Number.isNaN(battery.dischargeRate.value) ? 0 : battery.dischargeRate.value == Infinity ? 0 : battery.dischargeRate.value;
+    battery.estSOC.value = props.twin?.soc ? Math.round(props.twin.soc * 100) : battery.estSOC.value;
 })
 
 /*
@@ -193,6 +197,7 @@ const checkForNewData = async () => {
                 </ComplicationTemplate>
             </div>
         </div>
+        <p>* Not yet implemented or adequately tested.</p>
     </div>
 </template>
 
@@ -200,6 +205,9 @@ const checkForNewData = async () => {
 .grid__container-outer {
     max-width: 1100px;
     margin: 0 auto;
+    padding-top: 1.5rem;
+}
+.grid__container-outer > p {
     padding-top: 1.5rem;
 }
 .grid__container {

@@ -10,13 +10,16 @@ const error = ref(false)
 const splashScreenWaitTime = ref(1)
 const battery = ref()
 const errorMessage = ref('')
-const test = ref()
+const results = ref()
 
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 socket.on('error', (error) => {
 	errorMessage.value = error + '\n';
 })
+socket.on("connect_error", (err) => {
+  console.log(`connect_error due to ${err.message}`);
+});
 socket.on('connect', () => {
 	socket.emit('join-room')
 })
@@ -24,7 +27,7 @@ socket.on('receive-battery-data', (arg: any) => {
 	battery.value = arg
 })
 socket.on('receive-twin-results', (arg: any) => {
-	test.value = arg
+	results.value = JSON.parse(arg)
 })
 
 onMounted(() => {
@@ -40,10 +43,9 @@ onMounted(() => {
 </script>
 
 <template>
-	<h1>{{ test }}</h1>
 	<SplashScreen :loading="loading" :error="error" :error-message="errorMessage"/>
 	<TitleBar />
-	<ComplicationsGrid :data="battery"/>
+	<ComplicationsGrid :data="battery" :twin="results"/>
 </template>
 
 <style scoped>
